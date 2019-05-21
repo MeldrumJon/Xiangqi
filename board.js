@@ -101,23 +101,19 @@ function Board(container, images, sounds) {
         this_.clickSquare(sq_);
       }
     } (sq);
-  
-    img.ondragstart = function(sq_) {
-      return function(evt) {
-        evt.dataTransfer.setData('sqSrc', sq_);
-      }
-    } (sq);
+    img.ondragstart = function(evt) {
+      this.style.opacity = 0;
+    }
+    img.ondragend = function(evt) {
+      this.style.opacity = 1;
+    }
     img.ondragover = function (evt) {
       evt.preventDefault();
     }
     img.ondrop = function (sq_) {
       return function(evt) {
         evt.preventDefault();
-        // var sqSrc = evt.dataTransfer.getData('sqSrc');
-        // var sqDst = sq_;
-        // this_.clickSquare(sqSrc);
         this_.clickSquare(sq_);
-        // console.log(sqSrc, sqDst);
       }
     } (sq);
     container.appendChild(img);
