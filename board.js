@@ -329,7 +329,7 @@ Board.prototype.postAddMove2 = function() {
 }
 
 Board.prototype.postMate = function(computerMove) {
-  alertDelay(computerMove ? "Keep up the good work!" : "Congratulations on your victory!");
+  alertDelay(computerMove ? "You lose, but keep up the good work!" : "Congratulations on your victory!");
   this.postAddMove2();
   this.busy = false;
 }
