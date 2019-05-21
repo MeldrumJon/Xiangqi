@@ -1,31 +1,27 @@
-body {
-	background: url(../background.gif);
-  }
-  
-  span.td {
-	display: inline-block;
-  }
-  
-  div.label {
-	font-size: 14px;
-	padding:2px;
-  }
-  
-  select {
-	font-size: 14px;
-	width: 108px;
-	padding:2px;
-  }
-  
-  option {
-	font-size: 14px;
-  }
-  
-  input.button {
-	font-size: 14px;
-	width: 108px;
-  }
-  
-  label {
-	font-size: 14px;
-  }
+ span.td {
+ 	display: inline-block;
+ }
+
+ div.label {
+ 	font-size: 14px;
+ 	padding: 2px;
+ }
+
+ select {
+ 	font-size: 14px;
+ 	width: 108px;
+ 	padding: 2px;
+ }
+
+ option {
+ 	font-size: 14px;
+ }
+
+ input.button {
+ 	font-size: 14px;
+ 	width: 108px;
+ }
+
+ label {
+ 	font-size: 14px;
+ }

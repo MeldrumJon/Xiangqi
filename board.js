@@ -72,6 +72,7 @@ function Board(container, images, sounds) {
   this.sqSelected = 0;
   this.mvLast = 0;
   this.millis = 0;
+  this.online = false;
   this.computer = -1;
   this.result = RESULT_UNKNOWN;
   this.busy = false;
@@ -339,13 +340,15 @@ Board.prototype.response = function() {
     this.busy = false;
     return;
   }
-  this.thinking.style.visibility = "visible";
-  var this_ = this;
   this.busy = true;
-  setTimeout(function() {
-    this_.addMove(board.search.searchMain(LIMIT_DEPTH, board.millis), true);
-    this_.thinking.style.visibility = "hidden";
-  }, 250);
+  if (!board.online) { // If this is not an online game, have computer generate a move.
+    this.thinking.style.visibility = "visible";
+    var this_ = this;
+    setTimeout(function() {
+      this_.addMove(board.search.searchMain(LIMIT_DEPTH, board.millis), true);
+      this_.thinking.style.visibility = "hidden";
+    }, 250);
+  }
 }
 
 Board.prototype.clickSquare = function(sq_) {
