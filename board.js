@@ -261,15 +261,15 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     if (vlRep > -WIN_VALUE && vlRep < WIN_VALUE) {
       this.playSound("draw");
       this.result = RESULT_DRAW;
-      alertDelay("˫���������ͣ������ˣ�");
+      alertDelay("Draw from repetition!");
     } else if (computerMove == (vlRep < 0)) {
       this.playSound("loss");
       this.result = RESULT_LOSS;
-      alertDelay("�����������벻Ҫ���٣�");
+      alertDelay("You lose, but please don't give up!");
     } else {
       this.playSound("win");
       this.result = RESULT_WIN;
-      alertDelay("����������ף����ȡ��ʤ����");
+      alertDelay("Congratulations on your win!");
     }
     this.postAddMove2();
     this.busy = false;
@@ -287,7 +287,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     if (!hasMaterial) {
       this.playSound("draw");
       this.result = RESULT_DRAW;
-      alertDelay("˫����û�н��������ˣ������ˣ�");
+      alertDelay("Draw! Neither side has any offensive pieces.");
       this.postAddMove2();
       this.busy = false;
       return;
@@ -303,7 +303,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     if (!captured) {
       this.playSound("draw");
       this.result = RESULT_DRAW;
-      alertDelay("������Ȼ�������ͣ������ˣ�");
+      alertDelay("Draw!");
       this.postAddMove2();
       this.busy = false;
       return;
@@ -329,7 +329,7 @@ Board.prototype.postAddMove2 = function() {
 }
 
 Board.prototype.postMate = function(computerMove) {
-  alertDelay(computerMove ? "���ٽ�������" : "ף����ȡ��ʤ����");
+  alertDelay(computerMove ? "Keep up the good work!" : "Congratulations on your victory!");
   this.postAddMove2();
   this.busy = false;
 }

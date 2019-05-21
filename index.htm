@@ -1,7 +1,7 @@
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=gbk">
-    <title>象棋小巫师</title>
+    <meta http-equiv="Content-Type" content="text/html">
+    <title>Xiangqi Wizard</title>
     <script type="text/javascript" src="book.js"></script>
     <script type="text/javascript" src="position.js"></script>
     <script type="text/javascript" src="search.js"></script>
@@ -43,41 +43,41 @@ label {
     --></style>
   </head>
   <body>
-    <div style="text-align:center;font-size:28px;font-family:黑体">象棋小巫师</div>
+    <div style="text-align:center;font-size:28px;">Xiangqi Wizard</div>
     <div style="height:16px"></div>
     <div style="text-align:center;white-space:nowrap">
       <span class="td" style="margin-right:10px">
         <div id="container"></div>
       </span><span class="td" style="vertical-align:top;width:120px;"><div style="text-align:left">
-        <div class="label">谁先走</div>
+        <div class="label">Who goes first?</div>
         <div><select id="selMoveMode" size="3">
-          <option selected value="0">我先走</option>
-          <option value="1">电脑先走</option>
-          <option value="2">不用电脑</option>
+          <option selected value="0">I will go first</option>
+          <option value="1">Computer goes first</option>
+          <option value="2">Disable computer</option>
         </select></div>
-        <div class="label">先走让子</div>
+        <div class="label">Starting Player Handicap</div>
         <div><select id="selHandicap" style="padding:0px">
-          <option selected value="0">不让子</option>
-          <option value="1">让左马</option>
-          <option value="2">让双马</option>
-          <option value="3">让九子</option>
+          <option selected value="0">No handicap</option>
+          <option value="1">Remove one horse</option>
+          <option value="2">Remove both horses</option>
+          <option value="3">Remove elephants, advisors, pawns</option>
         </select></div>
-        <div style="padding-top:2px"><input type="button" class="button" value="重新开始" onclick="restart_click()"></div>
-        <div style="padding-top:2px"><input type="button" class="button" value="悔棋" onclick="retract_click()"></div>
+        <div style="padding-top:2px"><input type="button" class="button" value="Restart" onclick="restart_click()"></div>
+        <div style="padding-top:2px"><input type="button" class="button" value="Undo" onclick="retract_click()"></div>
         <div style="height:12px"></div>
-        <div class="label">电脑水平</div>
+        <div class="label">Computer Level</div>
         <div><select id="selLevel" size="3" onchange="level_change()">
-          <option selected value="0">入门</option>
-          <option value="1">业余</option>
-          <option value="2">专业</option>
+          <option selected value="0">Beginner</option>
+          <option value="1">Amateur</option>
+          <option value="2">Professional</option>
         </select></div>
         <div style="height:12px"></div>
-        <div><input type="checkbox" class="checkbox" id="chkAnimated" checked onclick="board.animated = checked"><label for="chkAnimated">动画</label></input></div>
-        <div><input type="checkbox" class="checkbox" checked onclick="board.setSound(checked)"><label for="chkSound">音效</label></input></div>
+        <div><input type="checkbox" class="checkbox" id="chkAnimated" checked onclick="board.animated = checked"><label for="chkAnimated">Animations</label></input></div>
+        <div><input type="checkbox" class="checkbox" checked onclick="board.setSound(checked)"><label for="chkSound">Sounds</label></input></div>
         <div style="height:60px"></div>
-        <div class="label">步骤</div>
-        <div><select id="selMoveList" size="10" style="font-family:宋体" onchange="moveList_change()">
-          <option selected value="0">=== 开始 ===</option>
+        <div class="label">Moves</div>
+        <div><select id="selMoveList" size="10" onchange="moveList_change()">
+          <option selected value="0">=== Start ===</option>
         </select></div>
       </div></span>
     </div>
