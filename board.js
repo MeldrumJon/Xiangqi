@@ -88,6 +88,7 @@ function Board(container, images, sounds) {
       continue;
     }
     var img = document.createElement("img");
+    img.setAttribute('draggable', true);
     var style = img.style;
     style.position = "absolute";
     style.left = SQ_X(sq);
@@ -96,8 +97,27 @@ function Board(container, images, sounds) {
     style.height = SQUARE_SIZE;
     style.zIndex = 0;
     img.onmousedown = function(sq_) {
-      return function() {
+      return function(evt) {
         this_.clickSquare(sq_);
+      }
+    } (sq);
+  
+    img.ondragstart = function(sq_) {
+      return function(evt) {
+        evt.dataTransfer.setData('sqSrc', sq_);
+      }
+    } (sq);
+    img.ondragover = function (evt) {
+      evt.preventDefault();
+    }
+    img.ondrop = function (sq_) {
+      return function(evt) {
+        evt.preventDefault();
+        // var sqSrc = evt.dataTransfer.getData('sqSrc');
+        // var sqDst = sq_;
+        // this_.clickSquare(sqSrc);
+        this_.clickSquare(sq_);
+        // console.log(sqSrc, sqDst);
       }
     } (sq);
     container.appendChild(img);
@@ -242,15 +262,15 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     if (vlRep > -WIN_VALUE && vlRep < WIN_VALUE) {
       this.playSound("draw");
       this.result = RESULT_DRAW;
-      alertDelay("Ë«·½²»±ä×÷ºÍ£¬ÐÁ¿àÁË£¡");
+      alertDelay("Ë«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½");
     } else if (computerMove == (vlRep < 0)) {
       this.playSound("loss");
       this.result = RESULT_LOSS;
-      alertDelay("³¤´ò×÷¸º£¬Çë²»ÒªÆøÄÙ£¡");
+      alertDelay("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë²»Òªï¿½ï¿½ï¿½Ù£ï¿½");
     } else {
       this.playSound("win");
       this.result = RESULT_WIN;
-      alertDelay("³¤´ò×÷¸º£¬×£ºØÄãÈ¡µÃÊ¤Àû£¡");
+      alertDelay("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×£ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ê¤ï¿½ï¿½ï¿½ï¿½");
     }
     this.postAddMove2();
     this.busy = false;
@@ -268,7 +288,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     if (!hasMaterial) {
       this.playSound("draw");
       this.result = RESULT_DRAW;
-      alertDelay("Ë«·½¶¼Ã»ÓÐ½ø¹¥Æå×ÓÁË£¬ÐÁ¿àÁË£¡");
+      alertDelay("Ë«ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½");
       this.postAddMove2();
       this.busy = false;
       return;
@@ -284,7 +304,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     if (!captured) {
       this.playSound("draw");
       this.result = RESULT_DRAW;
-      alertDelay("³¬¹ý×ÔÈ»ÏÞ×Å×÷ºÍ£¬ÐÁ¿àÁË£¡");
+      alertDelay("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½");
       this.postAddMove2();
       this.busy = false;
       return;
@@ -310,7 +330,7 @@ Board.prototype.postAddMove2 = function() {
 }
 
 Board.prototype.postMate = function(computerMove) {
-  alertDelay(computerMove ? "ÇëÔÙ½ÓÔÙÀ÷£¡" : "×£ºØÄãÈ¡µÃÊ¤Àû£¡");
+  alertDelay(computerMove ? "ï¿½ï¿½ï¿½Ù½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" : "×£ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ê¤ï¿½ï¿½ï¿½ï¿½");
   this.postAddMove2();
   this.busy = false;
 }
