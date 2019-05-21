@@ -113,7 +113,10 @@ function Board(container, images, sounds) {
     img.ondrop = function (sq_) {
       return function(evt) {
         evt.preventDefault();
+        var saveAnimate = this_.animated; // Disable animation when dragging and dropping.
+        this_.animated = false;
         this_.clickSquare(sq_);
+        this_.animated = saveAnimate;
       }
     } (sq);
     container.appendChild(img);
