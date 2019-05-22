@@ -393,7 +393,7 @@ Board.prototype.drawSquare = function(sq, selected) {
   else {
     img.src = this.images + name + ".svg";
   }
-  img.style.backgroundImage = selected ? "url(" + this.images + "oos.gif)" : "";
+  img.style.backgroundImage = selected ? "url(" + this.images + "oos.svg)" : "";
 }
 
 Board.prototype.flushBoard = function() {

@@ -1,4 +1,6 @@
-
+body{
+	background: #fdfbf6;
+}
 #container {
 	border-radius: 8px;
 	background-color: rgb(220, 196, 141);
