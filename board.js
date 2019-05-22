@@ -81,7 +81,7 @@ function Board(container, images, sounds) {
   style.position = "relative";
   style.width = BOARD_WIDTH + "px";
   style.height = BOARD_HEIGHT + "px";
-  style.background = "url(" + images + "board.svg) rgb(220, 196, 141)";
+  style.backgroundImage = "url(" + images + "board.svg)";
   style.ba
   var this_ = this;
   for (var sq = 0; sq < 256; sq ++) {

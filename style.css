@@ -1,3 +1,9 @@
+
+#container {
+	border-radius: 8px;
+	background-color: rgb(220, 196, 141);
+	box-shadow: 1px 1px #2A1200;
+}
  span.td {
  	display: inline-block;
  }
