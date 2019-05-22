@@ -75,6 +75,10 @@ function _comm_received(obj) {
 	let data = obj.data;
 
 	console.log(obj);
+
+	if (type === 'Move') {
+		board.onlineMove(data);
+	}
 }
 
 /**

@@ -81,7 +81,8 @@ function Board(container, images, sounds) {
   style.position = "relative";
   style.width = BOARD_WIDTH + "px";
   style.height = BOARD_HEIGHT + "px";
-  style.background = "url(" + images + "board.jpg)";
+  style.background = "url(" + images + "board.svg) #e8d8ca";
+  style.ba
   var this_ = this;
   for (var sq = 0; sq < 256; sq ++) {
     if (!IN_BOARD(sq)) {
@@ -100,6 +101,7 @@ function Board(container, images, sounds) {
     img.onmousedown = function(sq_) {
       return function(evt) {
         this_.clickSquare(sq_);
+        console.log(sq_);
       }
     } (sq);
     img.ondragstart = function(evt) {
@@ -177,6 +179,11 @@ Board.prototype.addMove = function(mv, computerMove) {
     return;
   }
   this.busy = true;
+
+  if (!computerMove && this.online) { // Send move to online player
+    comm_send('Move', mv);
+  }
+
   if (!this.animated) {
     this.postAddMove(mv, computerMove);
     return;
@@ -351,6 +358,10 @@ Board.prototype.response = function() {
   }
 }
 
+Board.prototype.onlineMove = function(mv) {
+  this.addMove(mv, true);
+}
+
 Board.prototype.clickSquare = function(sq_) {
   if (this.busy || this.result != RESULT_UNKNOWN) {
     return;
@@ -375,7 +386,13 @@ Board.prototype.clickSquare = function(sq_) {
 
 Board.prototype.drawSquare = function(sq, selected) {
   var img = this.imgSquares[this.flipped(sq)];
-  img.src = this.images + PIECE_NAME[this.pos.squares[sq]] + ".gif";
+  var name = PIECE_NAME[this.pos.squares[sq]];
+  if (name === 'oo') {
+    img.src = this.images + name + ".gif";
+  }
+  else {
+    img.src = this.images + name + ".svg";
+  }
   img.style.backgroundImage = selected ? "url(" + this.images + "oos.gif)" : "";
 }
 
@@ -395,7 +412,7 @@ Board.prototype.restart = function(fen) {
   this.result = RESULT_UNKNOWN;
   this.pos.fromFen(fen);
   this.flushBoard();
-  this.playSound("newgame");
+  // this.playSound("newgame");
   this.response();
 }
 
