@@ -5,11 +5,35 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="521"
    height="577"
    viewBox="0 0 137.84791 152.66459"
    version="1.1"
-   id="svg8">
+   id="svg8"
+   sodipodi:docname="board.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1216"
+     inkscape:window-height="695"
+     id="namedview11"
+     showgrid="false"
+     inkscape:zoom="1.6360485"
+     inkscape:cx="138.55985"
+     inkscape:cy="312.94915"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg8" />
   <defs
      id="defs2" />
   <metadata
@@ -20,61 +44,58 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g
-     id="layer1"
-     transform="translate(0,-144.33539)">
-    <path
-       style="fill:none;stroke:#562600;stroke-width:0.5291667;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1;paint-order:fill stroke markers"
-       d="M 8.4666761,152.80207 H 129.38126 M 8.4666761,167.91272 H 129.38126 M 8.4666761,183.02336 H 129.38126 M 8.4666761,198.13401 H 129.38126 M 8.4666761,213.24466 H 129.38126 M 8.4666761,228.35531 H 129.38126 M 8.4666761,243.46595 H 129.38126 M 8.4666761,258.57661 H 129.38126 M 8.4666761,273.68724 H 129.38126 M 8.4666761,288.7979 H 129.38126 M 8.4666761,152.80207 V 288.7979 M 129.38126,152.80207 V 288.7979 M 23.581,152.80207 v 60.44259 m 0,15.11065 V 288.7979 M 38.695324,152.80207 v 60.44259 m 0,15.11065 V 288.7979 M 53.809648,152.80207 v 60.44259 m 0,15.11065 V 288.7979 M 68.923972,152.80207 v 60.44259 m 0,15.11065 V 288.7979 M 84.038301,152.80207 v 60.44259 m 0,15.11065 V 288.7979 M 99.152618,152.80207 v 60.44259 m 0,15.11065 V 288.7979 M 114.26695,152.80207 v 60.44259 m 0,15.11065 V 288.7979 M 53.809648,152.80207 84.038301,183.02336 m 0,-30.22129 -30.228653,30.22129 m 0,75.55325 30.228653,30.22129 m 0,-30.22129 -30.228653,30.22129"
-       stroke-miterlimit="10"
-       id="path982" />
-    <text
-       id="text984"
-       dominant-baseline="central"
-       y="31.137089"
-       x="-220.79575"
-       text-decoration="normal"
-       font-weight="normal"
-       font-style="normal"
-       font-size="36px"
-       style="font-style:normal;font-weight:normal;font-size:10.88193798px;font-family:DFKai-SB, STKaiti;dominant-baseline:central;text-anchor:middle;fill:#562600;stroke:none;stroke-width:0.26458332;fill-opacity:1;"
-       transform="matrix(0,-0.99996551,1.0000345,0,0,0)">楚</text>
-    <text
-       id="text986"
-       dominant-baseline="central"
-       y="46.250893"
-       x="-220.79575"
-       text-decoration="normal"
-       font-weight="normal"
-       font-style="normal"
-       font-size="36px"
-       style="font-style:normal;font-weight:normal;font-size:10.88193798px;font-family:DFKai-SB, STKaiti;dominant-baseline:central;text-anchor:middle;fill:#562600;stroke:none;stroke-width:0.26458332;fill-opacity:1;"
-       transform="matrix(0,-0.99996551,1.0000345,0,0,0)">河</text>
-    <text
-       style="font-style:normal;font-weight:normal;font-size:10.88193798px;font-family:DFKai-SB, STKaiti;dominant-baseline:central;text-anchor:middle;fill:#562600;stroke:none;stroke-width:0.26458332;fill-opacity:1;"
-       font-size="36px"
-       font-style="normal"
-       font-weight="normal"
-       text-decoration="normal"
-       x="220.79575"
-       y="-106.7061"
-       dominant-baseline="central"
-       id="text988"
-       transform="matrix(0,0.99996551,-1.0000345,0,0,0)">漢</text>
-    <text
-       style="font-style:normal;font-weight:normal;font-size:10.88193798px;font-family:DFKai-SB, STKaiti;dominant-baseline:central;text-anchor:middle;fill:#562600;stroke:none;stroke-width:0.26458332;fill-opacity:1;"
-       font-size="36px"
-       font-style="normal"
-       font-weight="normal"
-       text-decoration="normal"
-       x="220.79575"
-       y="-91.5923"
-       dominant-baseline="central"
-       id="text990"
-       transform="matrix(0,0.99996551,-1.0000345,0,0,0)">界</text>
-  </g>
+  <path
+     inkscape:connector-curvature="0"
+     id="path982"
+     stroke-miterlimit="10"
+     d="M 8.4666761,8.46668 H 129.38126 M 8.4666761,23.57733 H 129.38126 M 8.4666761,38.68797 H 129.38126 M 8.4666761,53.79862 H 129.38126 M 8.4666761,68.90927 H 129.38126 M 8.4666761,84.01992 H 129.38126 M 8.4666761,99.13056 H 129.38126 M 8.4666761,114.24122 H 129.38126 M 8.4666761,129.35185 H 129.38126 M 8.4666761,144.46251 H 129.38126 M 8.4666761,8.46668 V 144.46251 M 129.38126,8.46668 V 144.46251 M 23.581,8.46668 v 60.44259 m 0,15.11065 v 60.44259 M 38.695324,8.46668 v 60.44259 m 0,15.11065 v 60.44259 M 53.809648,8.46668 v 60.44259 m 0,15.11065 v 60.44259 M 68.923972,8.46668 v 60.44259 m 0,15.11065 v 60.44259 M 84.038301,8.46668 v 60.44259 m 0,15.11065 v 60.44259 M 99.152618,8.46668 v 60.44259 m 0,15.11065 v 60.44259 M 114.26695,8.46668 v 60.44259 m 0,15.11065 v 60.44259 M 53.809648,8.46668 84.038301,38.68797 m 0,-30.22129 -30.228653,30.22129 m 0,75.55325 30.228653,30.22129 m 0,-30.22129 -30.228653,30.22129"
+     style="fill:none;stroke:#381800;stroke-width:0.5291667;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1;paint-order:fill stroke markers" />
+  <text
+     transform="matrix(0,-0.99996551,1.0000345,0,0,0)"
+     style="font-style:normal;font-weight:normal;font-size:10.88193798px;font-family:DFKai-SB, STKaiti;dominant-baseline:central;text-anchor:middle;fill:#381800;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+     font-size="36px"
+     font-style="normal"
+     font-weight="normal"
+     text-decoration="normal"
+     x="-76.455376"
+     y="31.137089"
+     dominant-baseline="central"
+     id="text984">楚</text>
+  <text
+     transform="matrix(0,-0.99996551,1.0000345,0,0,0)"
+     style="font-style:normal;font-weight:normal;font-size:10.88193798px;font-family:DFKai-SB, STKaiti;dominant-baseline:central;text-anchor:middle;fill:#381800;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+     font-size="36px"
+     font-style="normal"
+     font-weight="normal"
+     text-decoration="normal"
+     x="-76.455376"
+     y="46.250893"
+     dominant-baseline="central"
+     id="text986">河</text>
+  <text
+     transform="matrix(0,0.99996551,-1.0000345,0,0,0)"
+     id="text988"
+     dominant-baseline="central"
+     y="-106.7061"
+     x="76.455376"
+     text-decoration="normal"
+     font-weight="normal"
+     font-style="normal"
+     font-size="36px"
+     style="font-style:normal;font-weight:normal;font-size:10.88193798px;font-family:DFKai-SB, STKaiti;dominant-baseline:central;text-anchor:middle;fill:#381800;fill-opacity:1;stroke:none;stroke-width:0.26458332;">漢</text>
+  <text
+     transform="matrix(0,0.99996551,-1.0000345,0,0,0)"
+     id="text990"
+     dominant-baseline="central"
+     y="-91.5923"
+     x="76.455376"
+     text-decoration="normal"
+     font-weight="normal"
+     font-style="normal"
+     font-size="36px"
+     style="font-style:normal;font-weight:normal;font-size:10.88193798px;font-family:DFKai-SB, STKaiti;dominant-baseline:central;text-anchor:middle;fill:#381800;fill-opacity:1;stroke:none;stroke-width:0.26458332;">界</text>
 </svg>
