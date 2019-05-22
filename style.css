@@ -1,35 +1,69 @@
 body{
-	background: #fdfbf6;
+	background: #fbfbfb;
 }
-#container {
+
+#board {
 	border-radius: 8px;
 	background-color: rgb(220, 196, 141);
 	box-shadow: 1px 1px #2A1200;
 }
- span.td {
- 	display: inline-block;
- }
 
- div.label {
- 	font-size: 14px;
- 	padding: 2px;
- }
+#shade {
+	transition: opacity linear 0.25s;
+	background: rgba(0, 0, 0, 0.6);
+	position: fixed; /* Relative to view port (If user scrolls, we want the window to still be centered) */
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	/* Show Shade Normally */
+	opacity: 1;
+	z-index: 10;
+}
 
- select {
- 	font-size: 14px;
- 	width: 108px;
- 	padding: 2px;
- }
+.modal {
+	transition: opacity 0.25s linear 0s;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #fff;
+	box-shadow: rgba(0, 0, 0, 0.6) 0 0 40px;
+	padding: 1em;
+	/* Hide modal windows normally */
+	z-index: -10;
+	opacity: 0;
+	top: -50%;
+}
 
- option {
- 	font-size: 14px;
- }
+/*
+	Web App FSM States:
+Show modal windows:
+		init
+		online_or_comp
+		show_url
+		wait_for_connection
+		disconnected
+		computer_settings
+No modal windows:
+		game_comp
+		game_online
+*/
 
- input.button {
- 	font-size: 14px;
- 	width: 108px;
- }
+/* When to hide the shade */
+body.game_comp #shade,
+body.game_online #shade {
+	transition: opacity linear 0.25s;
+	z-index: -20;
+	opacity: 0;
+}
 
- label {
- 	font-size: 14px;
- }
+body.online_or_comp #online_or_comp,
+body.show_url #show_url,
+body.wait_for_connection #wait_for_connection,
+body.disconnected #disconnected,
+body.computer_settings #computer_settings { /* Show popup windows */
+	/* Show windows by opacity transition alone */
+	transition: opacity 0.25s linear 0s;
+	z-index: 20;
+	opacity: 1;
+	top: 50%;

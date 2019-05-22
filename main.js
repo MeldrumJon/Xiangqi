@@ -30,19 +30,38 @@ function PeerID2URL(id) {
 
 let callbacks = {
   'wait': (id) => { 
+    const shareURLEl = document.getElementById('share_url');
+    shareURLEl.innerHTML = PeerID2URL(id).href;
     console.log('Have peer connect to: ' + PeerID2URL(id));
   },
-  'connected': () => { console.log('Peer connected'); },
-  'disconnected': () => { console.log('Peer disconnected') }
+  'connected': () => { 
+    console.log('Peer connected'); 
+    fsm('CONNECTED');
+  },
+  'disconnected': () => { 
+    console.log('Peer disconnected') 
+    fsm('DISCONNECTED');
+  }
 };
 var peerID = URL2PeerID();
 comm_init(callbacks, peerID);
 
 if (peerID !== null) {
   setup(true, 0);
+  fsm('INIT_PEER');
 }
 else {
   setup(true, 1);
+  fsm('INIT_HOST');
+}
+
+const playOnlineEl = document.getElementById('play_online');
+const playComputerEl = document.getElementById('play_computer');
+playOnlineEl.onclick = function () {
+  fsm('ONLINE');
+}
+playComputerEl.onclick = function () {
+  fsm('COMPUTER');
 }
 
 /**** Xiangqi Wizard Setup ****/
@@ -55,10 +74,11 @@ var board;
  * @param {Number} first_move 1: This client goes first, 0: other player or computer goes first.
  */
 function setup(online, first_move) {
-  container.innerHTML = ''; // Clear board and move list
+  const boardCont = document.getElementById('board');
+  boardCont.innerHTML = ''; // Clear board and move list
   selMoveList.options.length = 1;
   selMoveList.selectedIndex = 0;
-  board = new Board(container, "images/", "sounds/");
+  board = new Board(boardCont, "images/", "sounds/");
   board.setSearch(16);
   board.millis = 10;
   board.online = online;

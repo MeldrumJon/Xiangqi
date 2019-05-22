@@ -82,7 +82,6 @@ function Board(container, images, sounds) {
   style.width = BOARD_WIDTH + "px";
   style.height = BOARD_HEIGHT + "px";
   style.backgroundImage = "url(" + images + "board.svg)";
-  style.ba
   var this_ = this;
   for (var sq = 0; sq < 256; sq ++) {
     if (!IN_BOARD(sq)) {
@@ -91,12 +90,14 @@ function Board(container, images, sounds) {
     }
     var img = document.createElement("img");
     img.setAttribute('draggable', true);
+    img.setAttribute('width', SQUARE_SIZE);
+    img.setAttribute('height', SQUARE_SIZE);
     var style = img.style;
     style.position = "absolute";
-    style.left = SQ_X(sq);
-    style.top = SQ_Y(sq);
-    style.width = SQUARE_SIZE;
-    style.height = SQUARE_SIZE;
+    style.left = SQ_X(sq) + 'px';
+    style.top = SQ_Y(sq) + 'px';
+    style.width = SQUARE_SIZE + 'px';
+    style.height = SQUARE_SIZE + 'px';
     style.zIndex = 0;
     img.onmousedown = function(sq_) {
       return function(evt) {
@@ -223,6 +224,13 @@ Board.prototype.postAddMove = function(mv, computerMove) {
   this.drawSquare(DST(mv), true);
   this.sqSelected = 0;
   this.mvLast = mv;
+
+  // if (computerMove) {
+  //   document.title = 'Your move!';
+  // }
+  // else {
+  //   document.title = 'Waiting for other player.'
+  // }
 
   if (this.pos.isMate()) {
     this.playSound(computerMove ? "loss" : "win");
