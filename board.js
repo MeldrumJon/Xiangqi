@@ -253,7 +253,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
         style.left = xMate + "px";
         style.zIndex = 0;
         this_.imgSquares[sqMate].src = this_.images +
-            (this_.pos.sdPlayer == 0 ? "r" : "b") + "km.gif";
+            (this_.pos.sdPlayer == 0 ? "r" : "b") + "km.svg";
         this_.postMate(computerMove);
       } else {
         style.left = (xMate + ((step & 1) == 0 ? step : -step) * 2) + "px";
