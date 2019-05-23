@@ -13,9 +13,9 @@ const STARTUP_FEN = [
  * Gets the peer ID we want to connect to from the URL.
  */
 function URL2PeerID() {
-	let params = new URLSearchParams(window.location.search);
-	let peerID = params.get('peerID');
-	return peerID;
+  let params = new URLSearchParams(window.location.search);
+  let peerID = params.get('peerID');
+  return peerID;
 }
 
 /**
@@ -23,23 +23,23 @@ function URL2PeerID() {
  * @param {String} id 
  */
 function PeerID2URL(id) {
-	let url = new URL(window.location.href);
-	url.searchParams.append('peerID', id);
-	return url;
+  let url = new URL(window.location.href);
+  url.searchParams.append('peerID', id);
+  return url;
 }
 
 let callbacks = {
-  'wait': (id) => { 
+  'wait': (id) => {
     const shareURLEl = document.getElementById('share_url');
     shareURLEl.innerHTML = PeerID2URL(id).href;
     console.log('Have peer connect to: ' + PeerID2URL(id));
   },
-  'connected': () => { 
-    console.log('Peer connected'); 
+  'connected': () => {
+    console.log('Peer connected');
     fsm('CONNECTED');
   },
-  'disconnected': () => { 
-    console.log('Peer disconnected') 
+  'disconnected': () => {
+    console.log('Peer disconnected')
     fsm('DISCONNECTED');
   }
 };
@@ -47,11 +47,8 @@ var peerID = URL2PeerID();
 comm_init(callbacks, peerID);
 
 if (peerID !== null) {
-  setup(true, 0);
   fsm('INIT_PEER');
-}
-else {
-  setup(true, 1);
+} else {
   fsm('INIT_HOST');
 }
 
@@ -62,6 +59,24 @@ playOnlineEl.onclick = function () {
 }
 playComputerEl.onclick = function () {
   fsm('COMPUTER');
+}
+
+/*** Select and copy share URL ***/
+const shareURL = document.getElementById('share_url');
+const copyBtn = document.getElementById('copy_btn');
+// Select Share URL
+shareURL.onclick = function () {
+  window.getSelection().selectAllChildren(shareURL);
+}
+// Copy Share URL
+copyBtn.onclick = function () {
+  window.getSelection().selectAllChildren(shareURL);
+  document.execCommand('copy');
+}
+
+const startCompEl = document.getElementById('start_comp');
+startCompEl.onclick = function() {
+  fsm('CONTINUE');
 }
 
 /**** Xiangqi Wizard Setup ****/
@@ -76,11 +91,29 @@ var board;
 function setup(online, first_move) {
   const boardCont = document.getElementById('board');
   boardCont.innerHTML = ''; // Clear board and move list
+
+  const undoBtn = document.getElementById('undo_area');
+  const loadingArea = document.getElementById('loading_area');
+  const soundChkbox = document.getElementById('sound_change');
+  const skillArea = document.getElementById('skill_change');
+  if (online) {
+    undoBtn.style.visibility = 'hidden';
+    loadingArea.style.visibility = 'hidden';
+    soundChkbox.style.visibility = 'visible';
+    skillArea.style.visibility = 'hidden';
+  }
+  else {
+    undoBtn.style.visibility = 'visible';
+    loadingArea.style.visibility = 'hidden';
+    soundChkbox.style.visibility = 'visible';
+    skillArea.style.visibility = 'visible';
+  }
+
   selMoveList.options.length = 1;
   selMoveList.selectedIndex = 0;
-  board = new Board(boardCont, "images/", "sounds/");
+  board = new Board(boardCont, "images/", "sounds/", loadingArea);
   board.setSearch(16);
-  board.millis = 10;
+  board.millis = Math.pow(10, selLevel.selectedIndex + 1);
   board.online = online;
   board.computer = first_move;
   board.onAddMove = function () {
@@ -97,6 +130,7 @@ function setup(online, first_move) {
     selMoveList.scrollTop = selMoveList.scrollHeight;
   };
   board.restart(STARTUP_FEN[selHandicap.selectedIndex]);
+  console.log(board.millis);
 }
 
 function createOption(text, value, ie8) {
@@ -112,7 +146,8 @@ function createOption(text, value, ie8) {
 }
 
 function level_change() {
-  board.millis = Math.pow(10, selLevel.selectedIndex + 1);
+  board.millis = Math.pow(10, changeLevel.selectedIndex + 1);
+  console.log(board.millis);
 }
 
 function restart_click() {
@@ -123,7 +158,7 @@ function restart_click() {
 }
 
 function retract_click() {
-  for (var i = board.pos.mvList.length; i < selMoveList.options.length; i ++) {
+  for (var i = board.pos.mvList.length; i < selMoveList.options.length; i++) {
     board.pos.makeMove(parseInt(selMoveList.options[i].value));
   }
   board.retract();
@@ -142,11 +177,11 @@ function moveList_change() {
     return;
   }
   if (from > to + 1) {
-    for (var i = to + 1; i < from; i ++) {
+    for (var i = to + 1; i < from; i++) {
       board.pos.undoMakeMove();
     }
   } else {
-    for (var i = from; i <= to; i ++) {
+    for (var i = from; i <= to; i++) {
       board.pos.makeMove(parseInt(selMoveList.options[i].value));
     }
   }

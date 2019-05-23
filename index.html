@@ -1,76 +1,114 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html">
-    <title>Xiangqi</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script defer type="text/javascript" src="https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js"></script>
-    <script defer type="text/javascript" src="comm.js"></script>
-    <script defer type="text/javascript" src="book.js"></script>
-    <script defer type="text/javascript" src="position.js"></script>
-    <script defer type="text/javascript" src="cchess.js"></script>
-    <script defer type="text/javascript" src="search.js"></script>
-    <script defer type="text/javascript" src="board.js"></script>
-    <script defer type="text/javascript" src="fsm.js"></script>
-    <script defer type="text/javascript" src="main.js"></script>
-  </head>
-  <body>
-    <h1>Xiangqi</h1>
-    <div id="board" style="width:521px;height:577px;"></div>
 
-    <div style="display: none">
-      <h2>Moves</h2>
-      <select id="selMoveList" size="10" onchange="moveList_change()">
-        <option selected value="0">=== Start ===</option>
-      </select>
-      <input type="checkbox" class="checkbox" id="chkAnimated" checked onclick="board.animated=checked"><label for="chkAnimated">Animations</label></input>
-      <input type="checkbox" class="checkbox" checked onclick="board.setSound(checked)"><label for="chkSound">Sounds</label></input>
-      <input type="button" class="button" value="Restart" onclick="restart_click()">
-      <input type="button" class="button" value="Undo" onclick="retract_click()">
+<head>
+  <meta http-equiv="Content-Type" content="text/html">
+  <title>Xiangqi</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script defer type="text/javascript" src="https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js"></script>
+  <script defer type="text/javascript" src="comm.js"></script>
+  <script defer type="text/javascript" src="book.js"></script>
+  <script defer type="text/javascript" src="position.js"></script>
+  <script defer type="text/javascript" src="cchess.js"></script>
+  <script defer type="text/javascript" src="search.js"></script>
+  <script defer type="text/javascript" src="board.js"></script>
+  <script defer type="text/javascript" src="fsm.js"></script>
+  <script defer type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+  <div id="wrap">
+    <div id="top_options">
+      <div id="loading_area" style="visibility: hidden">Loading</div>
+      <h1>Xiangqi</h1>
+      <div id="undo_area" style="visibility: hidden;">
+        <input type="button" class="button" value="Undo" onclick="retract_click()">
+      </div>
     </div>
 
-    <div id="shade">
-      <div id="online_or_comp" class="modal">
-        <h2>Play online or computer.</h2>
-        <a href="#" id="play_online">Online</a><br/>
-        <a href="#" id="play_computer">Computer</a><br/>
+    <div id="board" style="width:521px;height:577px;"></div>
+
+    <div id="bottom_options">
+      <div id="sound_change" style="visibility: hidden">
+        <input type="checkbox" class="checkbox" id="chkSound" checked onclick="board.setSound(checked)" /><label
+          for="chkSound"> Sounds</label>
       </div>
-      <div id="show_url" class="modal">
-        <h2>Share this link with a friend:</h2>
-        <div class="input_area">
-          <div id="share_url" class="info"></div>
-          <a id="copy_btn" role="button" href="#">Copy</a>
-        </div>
-      </div>
-      <div id="wait_for_connection" class="modal">
-        <h2>Connecting...</h2>
-        <p>Please wait while connecting to peer.</p>
-      </div>
-      <div id="disconnected" class="modal">
-        <h2>Disconnected.</h2>
-        <p>Your peer has disconnected.</p>
-      </div>
-      <div id="computer_settings" class="modal">
-        <h2>Who goes first?</h2>
-        <select id="selMoveMode" size="3">
-          <option selected value="0">I will go first</option>
-          <option value="1">Computer goes first</option>
-          <option value="2">Disable computer</option>
-        </select>
-        <h2>Starting Player Handicap</h2>
-        <select id="selHandicap" style="padding:0px">
-          <option selected value="0">No handicap</option>
-          <option value="1">Remove one horse</option>
-          <option value="2">Remove both horses</option>
-          <option value="3">Remove elephants, advisors, pawns</option>
-        </select>
-        <h2>Computer Skill</h2>
-        <select id="selLevel" size="3" onchange="level_change()">
+      <div id="skill_change" style="visibility: hidden">
+        <label for="changeLevel">Computer Skill: </label>
+        <select id="changeLevel" onchange="level_change()">
           <option selected value="0">Beginner</option>
           <option value="1">Amateur</option>
           <option value="2">Professional</option>
         </select>
       </div>
     </div>
-  </body>
+  </div>
+
+  <div style="display: none">
+    <h2>Moves</h2>
+    <select id="selMoveList" size="10" onchange="moveList_change()">
+      <option selected value="0">=== Start ===</option>
+    </select>
+    <input type="checkbox" class="checkbox" id="chkAnimated" checked onclick="board.animated=checked"><label
+      for="chkAnimated">Animations</label></input>
+    <input type="button" class="button" value="Restart" onclick="restart_click()">
+  </div>
+
+  <div id="shade">
+    <div id="online_or_comp" class="modal">
+      <div class="modal_border">
+        <h2>Play against computer or online friend?</h2>
+        <a href="#" id="play_online" class="big_button">Online</a>
+        <a href="#" id="play_computer" class="big_button">Computer</a>
+      </div>
+    </div>
+    <div id="show_url" class="modal">
+      <div class="modal_border">
+        <h2>Share this link with a friend:</h2>
+        <div class="input_area">
+          <div id="share_url" class="info"></div>
+          <a id="copy_btn" role="button" href="#">Copy</a>
+        </div>
+      </div>
+    </div>
+    <div id="wait_for_connection" class="modal">
+      <div class="modal_border">
+        <h2>Connecting...</h2>
+        <p>Please wait while connecting to peer.</p>
+      </div>
+    </div>
+    <div id="disconnected" class="modal">
+      <div class="modal_border">
+        <h2>Disconnected.</h2>
+        <p>Your peer has disconnected.</p>
+      </div>
+    </div>
+    <div id="computer_settings" class="modal">
+      <div class="modal_border">
+        <h2>Who moves first?</h2>
+        <select id="selMoveMode" size="2">
+          <option selected value="0">I will go first</option>
+          <option value="1">Computer goes first</option>
+        </select>
+        <h2>Starting Player Handicap</h2>
+        <select id="selHandicap">
+          <option selected value="0">No handicap</option>
+          <option value="1">Remove one horse</option>
+          <option value="2">Remove both horses</option>
+          <option value="3">Remove elephants, advisors, pawns</option>
+        </select>
+        <h2>Computer Skill</h2>
+        <select id="selLevel" size="3">
+          <option selected value="0">Beginner</option>
+          <option value="1">Amateur</option>
+          <option value="2">Professional</option>
+        </select>
+        <div class="continue_area">
+          <a class="big_button" href="#" id="start_comp">Start</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

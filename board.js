@@ -60,7 +60,7 @@ function alertDelay(message) {
   }, 250);
 }
 
-function Board(container, images, sounds) {
+function Board(container, images, sounds, thinking) {
   this.images = images;
   this.sounds = sounds;
   this.pos = new Position();
@@ -82,6 +82,8 @@ function Board(container, images, sounds) {
   style.width = BOARD_WIDTH + "px";
   style.height = BOARD_HEIGHT + "px";
   style.backgroundImage = "url(" + images + "board.svg)";
+  style.backgroundColor = 'rgb(220, 196, 141)';
+  style.boxShadow = '1px 1px #2A1200';
   var this_ = this;
   for (var sq = 0; sq < 256; sq ++) {
     if (!IN_BOARD(sq)) {
@@ -127,14 +129,14 @@ function Board(container, images, sounds) {
     this.imgSquares.push(img);
   }
 
-  this.thinking = document.createElement("img");
-  this.thinking.src = images + "thinking.gif";
-  style = this.thinking.style;
-  style.visibility = "hidden";
-  style.position = "absolute";
-  style.left = THINKING_LEFT + "px";
-  style.top = THINKING_TOP + "px";
-  container.appendChild(this.thinking);
+  this.thinking = thinking;
+  // this.thinking.src = images + "thinking.gif";
+  // style = this.thinking.style;
+  // style.visibility = "hidden";
+  // style.position = "absolute";
+  // style.left = THINKING_LEFT + "px";
+  // style.top = THINKING_TOP + "px";
+  // container.appendChild(this.thinking);
 
   this.dummy = document.createElement("div");
   this.dummy.style.position = "absolute";

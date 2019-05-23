@@ -1,11 +1,57 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
 body{
-	background: #fbfbfb;
+	font: normal normal normal 16px/1 "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	color: #000;
+	background: #eaeaea;
+}
+
+#wrap {
+	margin: 0 auto;
+	width: 521px;
+}
+
+#top_options {
+	margin: 0.8rem 0;
+	display: flex;
+	flex-direction: row;
+}
+#top_options #loading_area {
+	text-align: left;
+	flex:1;
+}
+#top_options #undo_area {
+	text-align: right;
+	flex: 1;
+}
+#top_options h1 {
+	font-size: 1.1rem;
+	text-align: center;
+}
+
+#bottom_options {
+	font-size: 14px;
+	margin-top: 1.2rem;
+	line-height: 1.4rem;
+	display: flex;
+}
+#sound_change {
+	flex: 1;
+	text-align: left;
+}
+#skill_change {
+	flex: 1;
+	text-align: right;
 }
 
 #board {
+	margin: 0 auto;
+	width:521px;
+	height:577px;
 	border-radius: 8px;
-	background-color: rgb(220, 196, 141);
-	box-shadow: 1px 1px #2A1200;
 }
 
 #shade {
@@ -22,17 +68,104 @@ body{
 }
 
 .modal {
+	/* padding: 0.4rem; */
 	transition: opacity 0.25s linear 0s;
 	position: absolute;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	background: #fff;
-	box-shadow: rgba(0, 0, 0, 0.6) 0 0 40px;
-	padding: 1em;
+	min-width: 400px;
+	/* box-shadow: rgba(0, 0, 0, 0.3) 0 0 40px; */
 	/* Hide modal windows normally */
 	z-index: -10;
 	opacity: 0;
 	top: -50%;
+}
+
+.modal_border {
+	border: solid 2px #000;
+	padding: 1rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	color:#333;
+	border-bottom: #777 1px solid;
+	margin: 1.3rem 0;
+	padding: 0 0em 0.4rem 0;
+}
+h2:first-child {
+	margin: 0 0 1.3rem 0;
+}
+
+select {
+	font-size: 0.8rem;
+	min-width: 100px;
+}
+option {
+	padding: 3px;
+}
+
+a.big_button {
+	display: block;
+	font-size: 1.2rem;
+	text-align: center;
+	font-weight: bold;
+	text-decoration: none;
+	padding: 0.4em;
+	margin-top: 0.2em;
+	background: #654D30;
+	color: #fff;
+	border: 2px #654D30 solid;
+}
+a.big_button:hover {
+	background:#be0007;
+	border: 2px #be0007 solid;
+}
+a.big_button:active {
+	border: 2px #210ec8 solid;
+}
+
+.modal .input_area {
+	display: flex;
+}
+.modal .input_area .info {
+	flex: 1;
+	padding: 0.5rem;
+	font-size: 1rem;
+	border: solid 1px #999;
+	border-right: none;
+	text-align: center;
+}
+.modal .input_area a {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	line-height: 1;
+	padding: 0.2rem 1rem;
+	font-size: 1.2rem;
+	border: none;
+	background: #654D30;
+	color: #fff;
+	border: 2px #654D30 solid;
+	font-weight: bold;
+	text-decoration: none;
+}
+.modal .input_area a:hover {
+	background:#be0007;
+	border: 2px #be0007 solid;
+}
+.modal .input_area a:active {
+	border: 2px #210ec8 solid;
+}
+
+.continue_area {
+	text-align: right;
+}
+
+#start_comp {
+	display:inline-block;
+	margin-top: 1rem;
 }
 
 /*
@@ -67,3 +200,4 @@ body.computer_settings #computer_settings { /* Show popup windows */
 	z-index: 20;
 	opacity: 1;
 	top: 50%;
+}

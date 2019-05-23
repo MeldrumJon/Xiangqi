@@ -16,18 +16,27 @@ const machine = {
 		// Online stuff
 		show_url: {
 			on: {
-				CONNECTED: 'game_online'
+				CONNECTED: () => {
+					setup(true, 1);
+					return 'game_online';
+				}
 			}
 		},
 		wait_for_connection: {
 			on: {
-				CONNECTED: 'game_online'
+				CONNECTED: () => {
+					setup(true, 0);
+					return 'game_online';
+				}
 			}
 		},
 		// Computer options
 		computer_settings: {
 			on: {
-				CONTINUE: 'game_comp'
+				CONTINUE: () => {
+					setup(false, 1 - selMoveMode.selectedIndex);
+					return 'game_comp';
+				}
 			}
 		},
 		disconnected: {},
