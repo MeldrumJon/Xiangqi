@@ -362,11 +362,11 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     }
   }
 
-  if (this.pos.inCheck()) {
-    this.playSound("check");
-    if (computerMove && board.online) {
+  if (this.pos.inCheck() && computerMove) {
+    if (board.online) {
       blinkTitle('Check!');
     }
+    this.playSound("check");
   } 
   else {
     if (this.pos.captured()) {
