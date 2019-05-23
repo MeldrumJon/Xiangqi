@@ -118,7 +118,7 @@ function setup(online, first_move) {
   // Alert if user might disconnect from game.
   if (online) {
     window.addEventListener("beforeunload", function (e) {
-      if (board.gameover) {
+      if (board.gameover || !comm_isConnected) {
           return undefined;
       }
       var confirmationMessage = 'If you leave the page, you will be disconnected.';
