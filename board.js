@@ -104,6 +104,12 @@ function Board(container, images, sounds, thinking) {
   this.busy = false;
   this.gameover = false;
 
+  this.soundFiles = {
+    capture: new Audio(this.sounds + 'capture' + ".wav"),
+    check: new Audio(this.sounds + 'check' + ".wav"),
+    move: new Audio(this.sounds + 'move' + ".wav")
+  };
+
   var style = container.style;
   style.position = "relative";
   style.width = BOARD_WIDTH + "px";
@@ -176,12 +182,7 @@ Board.prototype.playSound = function(soundFile) {
   if (!this.sound) {
     return;
   }
-  try {
-    new Audio(this.sounds + soundFile + ".wav").play();
-  } catch (e) {
-    this.dummy.innerHTML= "<embed src=\"" + this.sounds + soundFile +
-        ".wav\" hidden=\"true\" autostart=\"true\" loop=\"false\" />";
-  }
+  this.soundFiles[soundFile].play();
 }
 
 Board.prototype.setSearch = function(hashLevel) {

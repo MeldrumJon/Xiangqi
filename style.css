@@ -221,3 +221,7 @@ body.game_comp #skill_change,
 body.game_comp h1 {
 	visibility: visible;
 }
+
+#sounds {
+	display: none;
+}
