@@ -92,22 +92,7 @@ function setup(online, first_move) {
   const boardCont = document.getElementById('board');
   boardCont.innerHTML = ''; // Clear board and move list
 
-  const undoBtn = document.getElementById('undo_area');
   const loadingArea = document.getElementById('loading_area');
-  const soundChkbox = document.getElementById('sound_change');
-  const skillArea = document.getElementById('skill_change');
-  if (online) {
-    undoBtn.style.visibility = 'hidden';
-    loadingArea.style.visibility = 'hidden';
-    soundChkbox.style.visibility = 'visible';
-    skillArea.style.visibility = 'hidden';
-  }
-  else {
-    undoBtn.style.visibility = 'visible';
-    loadingArea.style.visibility = 'hidden';
-    soundChkbox.style.visibility = 'visible';
-    skillArea.style.visibility = 'visible';
-  }
 
   selMoveList.options.length = 1;
   selMoveList.selectedIndex = 0;

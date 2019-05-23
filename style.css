@@ -201,3 +201,23 @@ body.computer_settings #computer_settings { /* Show popup windows */
 	opacity: 1;
 	top: 50%;
 }
+
+#undo_area,
+#loading_area,
+#sound_change,
+#skill_change,
+h1 {
+	visibility: hidden;
+}
+
+body.game_online #sound_change,
+body.game_online h1 {
+	visibility: visible;
+}
+
+body.game_comp #undo_area,
+body.game_comp #sound_change,
+body.game_comp #skill_change,
+body.game_comp h1 {
+	visibility: visible;
+}

@@ -19,9 +19,9 @@
 <body>
   <div id="wrap">
     <div id="top_options">
-      <div id="loading_area" style="visibility: hidden">Loading</div>
+      <div id="loading_area">Loading</div>
       <h1>Xiangqi</h1>
-      <div id="undo_area" style="visibility: hidden;">
+      <div id="undo_area">
         <input type="button" class="button" value="Undo" onclick="retract_click()">
       </div>
     </div>
@@ -29,11 +29,11 @@
     <div id="board" style="width:521px;height:577px;"></div>
 
     <div id="bottom_options">
-      <div id="sound_change" style="visibility: hidden">
+      <div id="sound_change">
         <input type="checkbox" class="checkbox" id="chkSound" onclick="board.setSound(checked)" /><label
           for="chkSound"> Sounds</label>
       </div>
-      <div id="skill_change" style="visibility: hidden">
+      <div id="skill_change">
         <label for="changeLevel">Computer Skill: </label>
         <select id="changeLevel" onchange="level_change()">
           <option selected value="0">Beginner</option>
