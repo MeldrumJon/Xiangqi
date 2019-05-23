@@ -22,6 +22,32 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 "use strict";
 
+var gameTitle = 'Xiangqi';
+function blinkTitle(message) {
+  var intervalID = null;
+
+  function blink() {
+    document.title = document.title == message ? gameTitle : message;
+  }
+  function clear() {
+    if (intervalID !== null) {
+      clearInterval(intervalID);
+    }
+    intervalID = null;
+    document.title = gameTitle;
+    window.onmousemove = null;
+  };
+
+  clear();
+  blink();
+  intervalID = setInterval(blink, 1000);
+  window.onmousemove = function () {
+    if (document.hasFocus()) {
+      clear();
+    }
+  }
+};
+
 var RESULT_UNKNOWN = 0;
 var RESULT_WIN = 1;
 var RESULT_DRAW = 2;
@@ -228,15 +254,11 @@ Board.prototype.postAddMove = function(mv, computerMove) {
   this.sqSelected = 0;
   this.mvLast = mv;
 
-  // if (computerMove) {
-  //   document.title = 'Your move!';
-  // }
-  // else {
-  //   document.title = 'Waiting for other player.'
-  // }
-
   if (this.pos.isMate()) {
     this.playSound("check");
+    if (computerMove && board.online) {
+      blinkTitle('Checkmate!');
+    }
     this.result = computerMove ? RESULT_LOSS : RESULT_WIN;
     this.gameover = true;
 
@@ -291,6 +313,9 @@ Board.prototype.postAddMove = function(mv, computerMove) {
       this.result = RESULT_WIN;
       alertDelay("Congratulations on your win!");
     }
+    if (computerMove && board.online) {
+      blinkTitle('Gameover!');
+    }
     this.postAddMove2();
     this.busy = false;
     return;
@@ -308,6 +333,9 @@ Board.prototype.postAddMove = function(mv, computerMove) {
       // this.playSound("draw");
       this.result = RESULT_DRAW;
       alertDelay("Draw! Neither side has any offensive pieces.");
+      if (computerMove && board.online) {
+        blinkTitle('Gameover!');
+      }
       this.postAddMove2();
       this.busy = false;
       return;
@@ -324,6 +352,9 @@ Board.prototype.postAddMove = function(mv, computerMove) {
       // this.playSound("draw");
       this.result = RESULT_DRAW;
       alertDelay("Draw!");
+      if (computerMove && board.online) {
+        blinkTitle('Gameover!');
+      }
       this.postAddMove2();
       this.busy = false;
       return;
@@ -332,10 +363,19 @@ Board.prototype.postAddMove = function(mv, computerMove) {
 
   if (this.pos.inCheck()) {
     this.playSound("check");
-  } else if (this.pos.captured()) {
-    this.playSound("capture");
-  } else {
-    this.playSound("move");
+    if (computerMove && board.online) {
+      blinkTitle('Check!');
+    }
+  } 
+  else {
+    if (this.pos.captured()) {
+      this.playSound("capture");
+    } else {
+      this.playSound("move");
+    }
+    if (computerMove && board.online) {
+      blinkTitle('Your move!');
+    }
   }
 
   this.postAddMove2();
