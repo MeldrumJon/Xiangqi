@@ -66,7 +66,7 @@ function Board(container, images, sounds, thinking) {
   this.pos = new Position();
   this.pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1");
   this.animated = true;
-  this.sound = true;
+  this.sound = false;
   this.search = null;
   this.imgSquares = [];
   this.sqSelected = 0;
@@ -179,7 +179,7 @@ Board.prototype.addMove = function(mv, computerMove) {
     return;
   }
   if (!this.pos.makeMove(mv)) {
-    this.playSound("illegal");
+    // this.playSound("illegal");
     return;
   }
   this.busy = true;
@@ -236,7 +236,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
   // }
 
   if (this.pos.isMate()) {
-    this.playSound(computerMove ? "loss" : "win");
+    this.playSound("check");
     this.result = computerMove ? RESULT_LOSS : RESULT_WIN;
     this.gameover = true;
 
@@ -279,15 +279,15 @@ Board.prototype.postAddMove = function(mv, computerMove) {
   if (vlRep > 0) {
     vlRep = this.pos.repValue(vlRep);
     if (vlRep > -WIN_VALUE && vlRep < WIN_VALUE) {
-      this.playSound("draw");
+      // this.playSound("draw");
       this.result = RESULT_DRAW;
       alertDelay("Draw from repetition!");
     } else if (computerMove == (vlRep < 0)) {
-      this.playSound("loss");
+      // this.playSound("loss");
       this.result = RESULT_LOSS;
       alertDelay("You lose, but please don't give up!");
     } else {
-      this.playSound("win");
+      // this.playSound("win");
       this.result = RESULT_WIN;
       alertDelay("Congratulations on your win!");
     }
@@ -305,7 +305,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
       }
     }
     if (!hasMaterial) {
-      this.playSound("draw");
+      // this.playSound("draw");
       this.result = RESULT_DRAW;
       alertDelay("Draw! Neither side has any offensive pieces.");
       this.postAddMove2();
@@ -321,7 +321,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
       }
     }
     if (!captured) {
-      this.playSound("draw");
+      // this.playSound("draw");
       this.result = RESULT_DRAW;
       alertDelay("Draw!");
       this.postAddMove2();
@@ -331,11 +331,11 @@ Board.prototype.postAddMove = function(mv, computerMove) {
   }
 
   if (this.pos.inCheck()) {
-    this.playSound(computerMove ? "check2" : "check");
+    this.playSound("check");
   } else if (this.pos.captured()) {
-    this.playSound(computerMove ? "capture2" : "capture");
+    this.playSound("capture");
   } else {
-    this.playSound(computerMove ? "move2" : "move");
+    this.playSound("move");
   }
 
   this.postAddMove2();
@@ -381,7 +381,7 @@ Board.prototype.clickSquare = function(sq_) {
   var sq = this.flipped(sq_);
   var pc = this.pos.squares[sq];
   if ((pc & SIDE_TAG(this.pos.sdPlayer)) != 0) {
-    this.playSound("click");
+    // this.playSound("click");
     if (this.mvLast != 0) {
       this.drawSquare(SRC(this.mvLast), false);
       this.drawSquare(DST(this.mvLast), false);
@@ -445,7 +445,4 @@ Board.prototype.retract = function() {
 
 Board.prototype.setSound = function(sound) {
   this.sound = sound;
-  if (sound) {
-    this.playSound("click");
-  }
 }
