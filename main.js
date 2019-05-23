@@ -130,7 +130,17 @@ function setup(online, first_move) {
     selMoveList.scrollTop = selMoveList.scrollHeight;
   };
   board.restart(STARTUP_FEN[selHandicap.selectedIndex]);
-  console.log(board.millis);
+  // Alert if user might disconnect from game.
+  if (online) {
+    window.addEventListener("beforeunload", function (e) {
+      if (board.gameover) {
+          return undefined;
+      }
+      var confirmationMessage = 'If you leave the page, you will be disconnected.';
+      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+    });
+  }
 }
 
 function createOption(text, value, ie8) {

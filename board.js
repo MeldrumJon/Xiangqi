@@ -76,6 +76,7 @@ function Board(container, images, sounds, thinking) {
   this.computer = -1;
   this.result = RESULT_UNKNOWN;
   this.busy = false;
+  this.gameover = false;
 
   var style = container.style;
   style.position = "relative";
@@ -237,6 +238,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
   if (this.pos.isMate()) {
     this.playSound(computerMove ? "loss" : "win");
     this.result = computerMove ? RESULT_LOSS : RESULT_WIN;
+    this.gameover = true;
 
     var pc = SIDE_TAG(this.pos.sdPlayer) + PIECE_KING;
     var sqMate = 0;
