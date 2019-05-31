@@ -6,7 +6,7 @@
 body{
 	font: normal normal normal 16px/1 "Palatino Linotype", "Book Antiqua", Palatino, serif;
 	color: #000;
-	background: #eaeaea;
+	background: #fff;
 }
 
 #wrap {
@@ -55,8 +55,8 @@ body{
 }
 
 #shade {
-	transition: opacity linear 0.25s;
-	background: rgba(0, 0, 0, 0.6);
+	transition: opacity linear 0.5s;
+	background: rgba(0, 0, 0, 0.3);
 	position: fixed; /* Relative to view port (If user scrolls, we want the window to still be centered) */
 	top: 0;
 	bottom: 0;
@@ -83,7 +83,7 @@ body{
 }
 
 .modal_border {
-	border: solid 2px #000;
+	border: #777 1px solid;
 	padding: 1rem;
 }
 
@@ -106,24 +106,36 @@ option {
 	padding: 3px;
 }
 
+#choice_area{
+	text-align: center;
+}
+
+.or_sep {
+	text-transform: lowercase;
+	margin: 0 1.5rem;
+	vertical-align: middle;
+	display: inline-block;
+}
+
 a.big_button {
-	display: block;
+	display: inline-block;
+	vertical-align: middle;
 	font-size: 1.2rem;
 	text-align: center;
 	font-weight: bold;
 	text-decoration: none;
 	padding: 0.4em;
 	margin-top: 0.2em;
-	background: #654D30;
+	background: #6B7A8F;
 	color: #fff;
-	border: 2px #654D30 solid;
+	border: 2px #6B7A8F solid;
 }
 a.big_button:hover {
-	background:#be0007;
-	border: 2px #be0007 solid;
+	background:#F7882F;
+	border: 2px #F7882F solid;
 }
 a.big_button:active {
-	border: 2px #210ec8 solid;
+	border: 2px #F7C331 solid;
 }
 
 .modal .input_area {
@@ -145,18 +157,18 @@ a.big_button:active {
 	padding: 0.2rem 1rem;
 	font-size: 1.2rem;
 	border: none;
-	background: #654D30;
+	background: #6B7A8F;
 	color: #fff;
-	border: 2px #654D30 solid;
+	border: 2px #6B7A8F solid;
 	font-weight: bold;
 	text-decoration: none;
 }
 .modal .input_area a:hover {
-	background:#be0007;
-	border: 2px #be0007 solid;
+	background:#F7882F;
+	border: 2px #F7882F solid;
 }
 .modal .input_area a:active {
-	border: 2px #210ec8 solid;
+	border: 2px #F7C331 solid;
 }
 
 .continue_area {
@@ -185,7 +197,7 @@ No modal windows:
 /* When to hide the shade */
 body.game_comp #shade,
 body.game_online #shade {
-	transition: opacity linear 0.25s;
+	transition: opacity linear 0.5s;
 	z-index: -20;
 	opacity: 0;
 }

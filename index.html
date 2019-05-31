@@ -57,9 +57,12 @@
   <div id="shade">
     <div id="online_or_comp" class="modal">
       <div class="modal_border">
-        <h2>Play against computer or online friend?</h2>
+        <h2>Play against online friend or computer?</h2>
+        <div id="choice_area">
         <a href="#" id="play_online" class="big_button">Online</a>
+         <span class="or_sep">or</span> 
         <a href="#" id="play_computer" class="big_button">Computer</a>
+        </div>
       </div>
     </div>
     <div id="show_url" class="modal">
@@ -74,21 +77,21 @@
     <div id="wait_for_connection" class="modal">
       <div class="modal_border">
         <h2>Connecting...</h2>
-        <p>Please wait while connecting to peer.</p>
+        <p>Connecting to your opponent.</p>
       </div>
     </div>
     <div id="disconnected" class="modal">
       <div class="modal_border">
         <h2>Disconnected.</h2>
-        <p>Your peer has disconnected.</p>
+        <p>Your opponent has disconnected.</p>
       </div>
     </div>
     <div id="computer_settings" class="modal">
       <div class="modal_border">
         <h2>Who moves first?</h2>
         <select id="selMoveMode" size="2">
-          <option selected value="0">I will go first</option>
-          <option value="1">Computer goes first</option>
+          <option selected value="0">You</option>
+          <option value="1">Computer</option>
         </select>
         <h2>Starting Player Handicap</h2>
         <select id="selHandicap">
