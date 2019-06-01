@@ -116,7 +116,8 @@ function Board(container, images, sounds, thinking) {
   style.height = BOARD_HEIGHT + "px";
   style.backgroundImage = "url(" + images + "board.svg)";
   style.backgroundColor = '#DCC7AA';
-  style.boxShadow = '1px 1px #777';
+  style.borderRight = '1px solid #777';
+  style.borderBottom = '1px solid #777';
   var this_ = this;
   for (var sq = 0; sq < 256; sq ++) {
     if (!IN_BOARD(sq)) {

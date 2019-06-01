@@ -10,8 +10,9 @@ body{
 }
 
 #wrap {
+	width: fit-content;
 	margin: 0 auto;
-	width: 521px;
+	text-align: center;
 }
 
 #top_options {
@@ -145,7 +146,7 @@ a.big_button:active {
 	flex: 1;
 	padding: 0.5rem;
 	font-size: 1rem;
-	border: solid 1px #999;
+	border: solid 1px #777;
 	border-right: none;
 	text-align: center;
 }
