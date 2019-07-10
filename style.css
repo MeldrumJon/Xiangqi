@@ -48,11 +48,21 @@ body{
 	text-align: right;
 }
 
+#game {
+	border-right: 2px solid #777;
+	border-bottom: 2px solid #777;
+	background-color: #DCC7AA;
+	background-image: url('images/wood.png');
+	background-repeat: repeat;
+	padding: 10px;
+	border-top-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+}
+
 #board {
 	margin: 0 auto;
 	width:521px;
 	height:577px;
-	border-radius: 8px;
 }
 
 #shade {

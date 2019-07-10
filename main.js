@@ -115,6 +115,7 @@ function setup(online, first_move) {
     selMoveList.scrollTop = selMoveList.scrollHeight;
   };
   board.restart(STARTUP_FEN[selHandicap.selectedIndex]);
+  
   // Alert if user might disconnect from game.
   if (online) {
     window.addEventListener("beforeunload", function (e) {
