@@ -1,10 +1,11 @@
 # Xiangqi
 
-Online Xiangqi game, based on the JavaScript version of [XiangQi Wizard Light](https://github.com/xqbase/xqwlight).
+Online Xiangqi game, based on the JavaScript version of [XiangQi Wizard Light](https://github.com/xqbase/xqwlight).  Translated into English.  Aesthetic improvements.  Added the ability to play against human players across the internet using [PeerJS](https://github.com/peers/peerjs).
 
-Wood texture based on [Wood 2.jpg](https://opengameart.org/content/wood-texture-tiles).
+## Aesthetics
 
-Xiangqi pieces modified from [Wj654cj86's SVG pieces](https://commons.wikimedia.org/wiki/Category:Xiangqi_pieces).
+Wood texture based on [JCW's Wood texture at OpenGameArt.com](https://opengameart.org/content/wood-texture-tiles).
+
+Xiangqi pieces modified from [Wj654cj86's SVG Xiangqi pieces](https://commons.wikimedia.org/wiki/Category:Xiangqi_pieces).
 
 Capture and move sounds created from [KaterinaGalasova's board game sounds](https://freesound.org/people/KaterinaGalasova/sounds/461931/).
-

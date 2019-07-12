@@ -5,15 +5,15 @@
   <meta http-equiv="Content-Type" content="text/html">
   <title>Xiangqi</title>
   <link rel="stylesheet" type="text/css" href="style.css">
-  <script defer type="text/javascript" src="https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js"></script>
-  <script defer type="text/javascript" src="comm.js"></script>
-  <script defer type="text/javascript" src="book.js"></script>
-  <script defer type="text/javascript" src="position.js"></script>
-  <script defer type="text/javascript" src="cchess.js"></script>
-  <script defer type="text/javascript" src="search.js"></script>
-  <script defer type="text/javascript" src="board.js"></script>
-  <script defer type="text/javascript" src="fsm.js"></script>
-  <script defer type="text/javascript" src="main.js"></script>
+  <script defer type="text/javascript" src="peerjs/peerjs.min.js"></script>
+  <script defer type="text/javascript" src="js/comm.js"></script>
+  <script defer type="text/javascript" src="js/book.js"></script>
+  <script defer type="text/javascript" src="js/position.js"></script>
+  <script defer type="text/javascript" src="js/cchess.js"></script>
+  <script defer type="text/javascript" src="js/search.js"></script>
+  <script defer type="text/javascript" src="js/board.js"></script>
+  <script defer type="text/javascript" src="js/fsm.js"></script>
+  <script defer type="text/javascript" src="js/main.js"></script>
 </head>
 
 <body>
@@ -70,10 +70,15 @@
     <div id="show_url" class="modal">
       <div class="modal_border">
         <h2>Share this link with a friend:</h2>
-        <div class="input_area">
-          <div id="share_url" class="info"></div>
-          <a id="copy_btn" role="button" href="#">Copy</a>
+        <div id="peer-id" style="display: none">
+          <div class="input_area">
+            <div id="share_url" class="info"></div>
+            <a id="copy_btn" role="button" href="#">Copy</a>
+          </div>
         </div>
+        <p id="peer-server-connecting">
+          Trying to connect to PeerJS server...
+        </p>
       </div>
     </div>
     <div id="wait_for_connection" class="modal">

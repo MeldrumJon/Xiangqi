@@ -30,6 +30,11 @@ function PeerID2URL(id) {
 
 let callbacks = {
   'wait': (id) => {
+    const waitingEl = document.getElementById('peer-server-connecting');
+    const connectedEl = document.getElementById('peer-id');
+    waitingEl.style.display = 'none';
+    connectedEl.style.display = 'block';
+
     const shareURLEl = document.getElementById('share_url');
     shareURLEl.innerHTML = PeerID2URL(id).href;
     console.log('Have peer connect to: ' + PeerID2URL(id));
