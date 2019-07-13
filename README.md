@@ -20,6 +20,6 @@ Capture and move sounds created from
 
 PeerJS is licensed under the [MIT license](https://tldrlegal.com/license/mit-license), 
 and its source code is available [here](https://github.com/peers/peerjs).  
-All other source code is licensed under [GNU General Public License v2.0](./LICENSE).
+This project's source code is licensed under [GNU General Public License v2.0](./LICENSE).
 Images and sounds in the `images` and `sounds` directories are licensed under the 
 [Creative Commons 0 License](https://creativecommons.org/publicdomain/zero/1.0/).
