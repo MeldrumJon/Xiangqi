@@ -188,6 +188,9 @@ a.big_button:active {
 	display:inline-block;
 	margin-top: 1rem;
 }
+#results_msg {
+	margin-bottom: 0.65rem;
+}
 
 /*
 	Web App FSM States:
@@ -211,11 +214,19 @@ body.game_online #shade {
 	opacity: 0;
 }
 
+body.results #shade {
+	/* Show Shade Normally */
+	transition: opacity linear 0.5s;
+	opacity: 1;
+	z-index: 10;
+}
+
 body.online_or_comp #online_or_comp,
 body.show_url #show_url,
 body.wait_for_connection #wait_for_connection,
 body.disconnected #disconnected,
-body.computer_settings #computer_settings { /* Show popup windows */
+body.computer_settings #computer_settings,
+body.results #results { /* Show popup windows */
 	/* Show windows by opacity transition alone */
 	transition: opacity 0.25s linear 0s;
 	z-index: 20;

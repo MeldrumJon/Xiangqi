@@ -84,6 +84,13 @@ startCompEl.onclick = function() {
   fsm('CONTINUE');
 }
 
+/*** Show/Hide Results ***/
+const closeResults = document.getElementById('close_result');
+closeResults.onclick = function () {
+  const body = document.getElementsByTagName("BODY")[0];
+  body.classList.remove('results');
+}
+
 /**** Xiangqi Wizard Setup ****/
 
 var board;

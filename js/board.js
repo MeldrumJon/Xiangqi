@@ -80,10 +80,11 @@ function MOVE_PX(src, dst, step) {
   return Math.floor((src * step + dst * (MAX_STEP - step)) / MAX_STEP + .5) + "px";
 }
 
-function alertDelay(message) {
-  setTimeout(function() {
-    alert(message);
-  }, 250);
+function modal_alert(message) {
+  const body = document.getElementsByTagName("BODY")[0];
+  body.className += ' results';
+  const msgEl = document.getElementById('result_msg');
+  msgEl.innerHTML = message;
 }
 
 function Board(container, images, sounds, thinking) {
@@ -302,15 +303,15 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     if (vlRep > -WIN_VALUE && vlRep < WIN_VALUE) {
       // this.playSound("draw");
       this.result = RESULT_DRAW;
-      alertDelay("Draw from repetition!");
+      modal_alert("Draw from repetition!");
     } else if (computerMove == (vlRep < 0)) {
       // this.playSound("loss");
       this.result = RESULT_LOSS;
-      alertDelay("You lose, but please don't give up!");
+      modal_alert("You lose, but please don't give up!");
     } else {
       // this.playSound("win");
       this.result = RESULT_WIN;
-      alertDelay("Congratulations on your win!");
+      modal_alert("Congratulations on your win!");
     }
     if (computerMove && board.online) {
       blinkTitle('Gameover!');
@@ -331,7 +332,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     if (!hasMaterial) {
       // this.playSound("draw");
       this.result = RESULT_DRAW;
-      alertDelay("Draw! Neither side has any offensive pieces.");
+      modal_alert("Draw! Neither side has any offensive pieces.");
       if (computerMove && board.online) {
         blinkTitle('Gameover!');
       }
@@ -350,7 +351,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     if (!captured) {
       // this.playSound("draw");
       this.result = RESULT_DRAW;
-      alertDelay("Draw!");
+      modal_alert("Draw!");
       if (computerMove && board.online) {
         blinkTitle('Gameover!');
       }
@@ -388,7 +389,7 @@ Board.prototype.postAddMove2 = function() {
 }
 
 Board.prototype.postMate = function(computerMove) {
-  alertDelay(computerMove ? "You lose, but keep up the good work!" : "Congratulations on your victory!");
+  modal_alert(computerMove ? "You lose, but keep up the good work!" : "Congratulations on your victory!");
   this.postAddMove2();
   this.busy = false;
 }
