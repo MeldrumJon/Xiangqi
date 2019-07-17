@@ -188,7 +188,8 @@ a.big_button:active {
 	display:inline-block;
 	margin-top: 1rem;
 }
-#results_msg {
+
+#result_msg {
 	margin-bottom: 0.65rem;
 }
 
