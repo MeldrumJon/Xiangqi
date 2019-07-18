@@ -136,7 +136,6 @@ function Board(container, images, sounds, thinking) {
     img.onmousedown = function(sq_) {
       return function(evt) {
         this_.clickSquare(sq_);
-        console.log(sq_);
       }
     } (sq);
     img.ondragstart = function(evt) {

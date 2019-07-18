@@ -16,6 +16,8 @@ Xiangqi pieces modified from
 Capture and move sounds created from 
 [KaterinaGalasova's board game sounds](https://freesound.org/people/KaterinaGalasova/sounds/461931/).
 
+Computer "thinking" gif created with [ajaxload.info](http://www.ajaxload.info/).
+
 ## License
 
 PeerJS is licensed under the [MIT license](https://tldrlegal.com/license/mit-license), 

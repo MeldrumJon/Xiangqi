@@ -111,6 +111,8 @@ function setup(online, first_move) {
   board = new Board(boardCont, "images/", "sounds/", loadingArea);
   board.setSearch(16);
   board.millis = Math.pow(10, selLevel.selectedIndex + 1);
+  const changeLevel = document.getElementById('changeLevel');
+  changeLevel.value = selLevel.selectedIndex;
   board.online = online;
   board.computer = first_move;
   board.onAddMove = function () {
