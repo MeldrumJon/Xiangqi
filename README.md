@@ -15,3 +15,12 @@ Wood texture based on [JCW's Wood texture at OpenGameArt.com](https://opengamear
 ## License
 
 PeerJS is licensed under the [MIT license](https://tldrlegal.com/license/mit-license), and its source code is available [here](https://github.com/peers/peerjs). This project's source code is licensed under [GNU General Public License v2.0](./LICENSE). Images and sounds in the `images` and `sounds` directories are licensed under the [Creative Commons 0 License](https://creativecommons.org/publicdomain/zero/1.0/).
+
+## Testing a Peer-to-Peer Game Locally
+
+1. Install [Node's](https://nodejs.org/en/) http-server package:
+```
+sudo npm install http-server -g
+```
+2. Run `http-server -c-1 [path]` where `[path]` points to this folder.
+3. Open localhost:8080 in the browser.
