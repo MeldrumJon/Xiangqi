@@ -1,269 +1,537 @@
+/*
+ * Use https://autoprefixer.github.io/
+ * with browsers > 0%
+ * to compile with prefixes
+ */
+
+/* Elements */
 * {
 	margin: 0;
 	padding: 0;
 }
+html, body {
+	height: 100%;
+}
 
-body{
-	font: normal normal normal 16px/1 "Palatino Linotype", "Book Antiqua", Palatino, serif;
-	color: #000;
+body {
 	background: #fff;
-}
-
-#wrap {
-	width: fit-content;
-	margin: 0 auto;
-	text-align: center;
-}
-
-#top_options {
-	margin: 0.8rem 0;
-	display: flex;
-	flex-direction: row;
-}
-#top_options #loading_area {
-	text-align: left;
-	flex:1;
-}
-#top_options #undo_area {
-	text-align: right;
-	flex: 1;
-}
-#top_options h1 {
-	font-size: 1.1rem;
-	text-align: center;
-}
-
-#bottom_options {
-	font-size: 14px;
-	margin-top: 1.2rem;
-	line-height: 1.4rem;
-	display: flex;
-}
-#sound_change {
-	flex: 1;
-	text-align: left;
-}
-#skill_change {
-	flex: 1;
-	text-align: right;
-}
-
-#game {
-	background-color: #DCC7AA;
-	background-image: url('images/wood.png');
-	background-repeat: repeat;
-	padding: 10px;
-	border: 1px solid #777;
-	box-shadow: rgba(0, 0, 0, 0.3) 0.5px 1px 2px;
-}
-
-#board {
-	margin: 0 auto;
-	width:521px;
-	height:577px;
-}
-
-#shade {
-	transition: opacity linear 0.5s;
-	background: rgba(0, 0, 0, 0.3);
-	position: fixed; /* Relative to view port (If user scrolls, we want the window to still be centered) */
+	font: 100%/1 Verdana, Geneva, sans-serif;
+	/* Fix for mobile */
+	position: fixed;
 	top: 0;
-	bottom: 0;
 	right: 0;
-	left: 0;
-	/* Show Shade Normally */
-	opacity: 1;
-	z-index: 10;
-}
-
-.modal {
-	/* padding: 0.4rem; */
-	transition: opacity 0.25s linear 0s;
-	position: absolute;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	background: #fff;
-	min-width: 400px;
-	box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 12px;
-	/* Hide modal windows normally */
-	z-index: -10;
-	opacity: 0;
-	top: -50%;
-}
-
-.modal_border {
-	border: #333 1px solid;
-	padding: 1rem;
+	bottom: 0;
+	left:0;
 }
 
 h2 {
-	font-size: 1.5rem;
-	color:#333;
-	border-bottom: #777 1px solid;
-	margin: 1.3rem 0;
-	padding: 0 0em 0.4rem 0;
+	font: 1.8rem/1 Georgia, "Times New Roman", Times, serif;
+	text-align: center;
+	letter-spacing: 0.02em;
+	margin: 1.6rem 0 1rem 0;
+	color: #41372e
 }
 h2:first-child {
-	margin: 0 0 1.3rem 0;
+	margin-top: 0;
+}
+p {
+	line-height: 1.5;
+	margin-bottom: 1rem;
+}
+p:last-child {
+	margin-bottom: 0;
 }
 
-select {
+fieldset {
+	display: inline-block;
+	vertical-align: top;
+	line-height: 1.5;
 	font-size: 0.8rem;
-	min-width: 100px;
-}
-option {
-	padding: 3px;
-}
-
-#choice_area{
-	text-align: center;
-}
-
-.or_sep {
-	text-transform: lowercase;
-	margin: 0 1.5rem;
-	vertical-align: middle;
-	display: inline-block;
-}
-
-a.big_button {
-	display: inline-block;
-	vertical-align: middle;
-	font-size: 1.2rem;
-	text-align: center;
-	font-weight: bold;
-	text-decoration: none;
-	padding: 0.4em;
-	margin-top: 0.2em;
-	background: #6B7A8F;
-	color: #fff;
-	border: 2px #6B7A8F solid;
-}
-a.big_button:hover {
-	background:#F7882F;
-	border: 2px #F7882F solid;
-}
-a.big_button:active {
-	border: 2px #F7C331 solid;
-}
-
-.modal .input_area {
-	display: flex;
-}
-.modal .input_area .info {
-	flex: 1;
-	padding: 0.5rem;
-	font-size: 1rem;
-	border: solid 1px #777;
-	border-right: none;
-	text-align: center;
-}
-.modal .input_area a {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	line-height: 1;
-	padding: 0.2rem 1rem;
-	font-size: 1.2rem;
 	border: none;
-	background: #6B7A8F;
+	margin: 0.6rem;
+	text-align: left;
+}
+fieldset:last-child {
+	margin-bottom: 0.6rem;
+}
+legend {
+	font: bold 0.9rem/1 "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	text-align: left;
+	margin: 0 0rem 0.6rem 0rem;
+	padding: 0 0.3rem;
+	color: #41372e
+}
+
+button {
+	display: inline-block;
+	margin: 0.3rem;
+	padding: 0.7rem 0.8rem;
+	font: bold 0.8rem/1 "Lucida Grande", "Lucida Sans Unicode", "Trebuchet MS", Helvetica, sans-serif;
+	text-align: center;
+	background: #fff padding-box;
+	color: #333;
+	outline: none;
+	border: 1px solid #aaa;
+}
+button:enabled:hover {
+	border-color: #BC0E29;
+	background-color: #BC0E29;
 	color: #fff;
-	border: 2px #6B7A8F solid;
-	font-weight: bold;
-	text-decoration: none;
+	cursor: pointer;
 }
-.modal .input_area a:hover {
-	background:#F7882F;
-	border: 2px #F7882F solid;
-}
-.modal .input_area a:active {
-	border: 2px #F7C331 solid;
+button:enabled:active {
+	border-color: transparent;
 }
 
-.continue_area {
+.selgrp {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0.3rem;
+}
+select {
+	display: inline-block;
+	vertical-align: middle;
+	font: 0.8rem/1 "Lucida Grande", "Lucida Sans Unicode", "Trebuchet MS", Helvetica, sans-serif;
+	color: #333;
+	background: #fff;
+	border: 1px solid #aaa;
+}
+
+.radiogrp {
+	margin: 0.3rem;
+	display: inline-block;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+input[type='radio'] + label {
+	display: table-cell;
+	padding: 0.7rem 0.8rem;
+	font: bold 0.8rem/1 "Lucida Grande", "Lucida Sans Unicode", "Trebuchet MS", Helvetica, sans-serif;
+	background: #fff padding-box;
+	color: #333;
+	outline: none;
+	border: 1px inset #aaa;
+}
+input[type='radio']:enabled + label:hover {
+	color: #BC0E29;
+	border: 1px solid #BC0E29;
+	cursor: pointer;
+}
+input[type='radio']:enabled:checked + label {
+	border: 1px solid #BC0E29;
+	background-color: #BC0E29;
+	color: #fff;
+}
+input[type='radio'] {
+	display: none;
+}
+
+input[type='checkbox'] + label {
+	display: block;
+	font: 0.8rem/1 "Lucida Grande", "Lucida Sans Unicode", "Trebuchet MS", Helvetica, sans-serif;
+	color: #333;
+	outline: none;
+}
+input[type='checkbox'] + label .switch {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	height: 1.0rem;
+	width: 1.8rem;
+	margin: 0.3rem 0.6rem 0.3rem 0.3rem;
+	background: #fff padding-box;
+	border: 1px solid #aaa;
+	border-radius: 0.5rem;
+}
+input[type='checkbox'] + label .slider {
+	position: absolute;
+	width: 0.65rem;
+	height: 0.65rem;
+	width: calc(1.0rem - 6px);
+	height: calc(1.0rem - 6px);
+	top: 3px;
+	left: 3px;
+	background: #333;
+	border-radius: 50%;
+}
+
+input[type='checkbox']:enabled + label:hover {
+	color: #BC0E29;
+	cursor: pointer;
+}
+input[type='checkbox']:enabled + label:hover .switch {
+	border-color: #BC0E29;
+}
+input[type='checkbox']:enabled + label:hover .slider {
+	background: #BC0E29;
+}
+
+input[type='checkbox']:checked + label .switch {
+	border-color: #BC0E29;
+	background-color: #BC0E29;
+}
+input[type='checkbox']:checked + label:hover .switch {
+	border-color: transparent;
+}
+input[type='checkbox']:enabled:checked + label .slider {
+	background: #fff;
+	left: auto;
+	right: 3px;
+}
+
+input[type='checkbox'] {
+	display: none;
+}
+
+input[type="text"] {
+	font-size: 1rem;
+}
+
+.combo {
+	display: flex;
+}
+.combo .stretch {
+	flex: 1;
+	padding: 0.7rem;
+	border: 1px solid #aaa;
+	border-right: none;
+	line-height: 1;
+}
+.combo button {
+	margin: 0;
+}
+.combo button:active {
+	border-color: transparent;
+	border-left-color: #aaa;
+}
+
+input:disabled, button:disabled {
+	opacity: 0.5;
+}
+input:disabled + label {
+	opacity: 0.5;
+}
+
+/* Sidebars */
+
+button.sidebtn, button.sidebtn:enabled {
+	font-size: 0.8rem;
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	background: #fff;
+	color: #333;
+	border: none;
+}
+body.unread button.sidebtn#btnChat {
+	color: #FE8D05;
+}
+button.sidebtn:hover, body.unread button.sidebtn#btnChat:hover {
+	color: #BC0E29;
+}
+button.sidebtn span {
+	display: block;
+	padding: 0.5rem;
+}
+
+#btnSettings { z-index: 6; }
+#btnChat { z-index: 11; }
+
+@media (orientation: portrait) {
+	button.sidebtn {
+		width: 100%;
+	}
+	#btnChat {
+		top: 0;
+		border-bottom: 1px solid #d9d9d9;
+	}
+	#btnSettings {
+		bottom: 0;
+		border-top: 1px solid #d9d9d9;
+	}
+	body.chat #btnChat {
+		top: 25%;
+		border-top: 1px solid #d9d9d9;
+	}
+	body.settings #btnSettings {
+		bottom: 25%;
+		border-bottom: 1px solid #d9d9d9;
+	}
+	#btnChat span:after { content: " ▾"; }
+	body.chat #btnChat span:after { content: " ▴"; }
+	#btnSettings span:after { content: " ▴"; }
+	body.settings #btnSettings span:after { content: " ▾"; }
+}
+@media (orientation: landscape) {
+	button.sidebtn {
+		top: 0;
+		bottom: 0;
+		width: 1.8rem;
+	}
+	button.sidebtn span {
+		writing-mode: vertical-lr;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left:0;
+		right:0;
+	}
+	#btnChat {
+		left: 0;
+		border-right: 1px solid #d9d9d9;
+	}
+	#btnSettings {
+		right: 0;
+		border-left: 1px solid #d9d9d9;
+	}
+	body.chat #btnChat {
+		left: 320px;
+		border-left: 1px solid #d9d9d9;
+	}
+	body.settings #btnSettings {
+		right: 320px;
+		border-right: 1px solid #d9d9d9;
+	}
+	#btnChat span {
+		transform-origin: center center;
+		transform: rotate(180deg);
+	}
+
+	#btnChat span:after { content: " ◂"; }
+	body.chat #btnChat span:after { content: " ▸"; }
+	#btnSettings span:after { content: " ◂"; }
+	body.settings #btnSettings span:after { content: " ▸"; }
+}
+
+
+/* Sidebars */
+
+div.sidebar {
+	position: absolute;
+	background: #f4f4f4;
+}
+#settings { z-index: 5; }
+#chat { z-index: 10; }
+
+@media (orientation: portrait) {
+	div.sidebar {
+		width: 100%;
+		height: 25%;
+		text-align: center;
+		overflow-y: auto;
+		box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
+	}
+	#chat {
+		top: 0;
+		border-bottom: 1px solid #aaa;
+	}
+	#settings {
+		bottom: 0;
+		border-top: 1px solid #aaa;
+	}
+}
+
+@media (orientation: landscape) {
+	div.sidebar {
+		top: 0;
+		bottom: 0;
+		width: 320px;
+	}
+	#chat {
+		left: 0;
+	}
+	#settings {
+		right: 0;
+	}
+}
+
+
+#settings { display: none; }
+#chat {display: none; }
+
+body.settings #settings { display: block; }
+body.chat #chat { display: block; }
+
+/* Chat Window */
+
+.messages {
+	height: 100%;
+	max-height: 100%;
+	position: relative;
+}
+.bubbles {
+	position: absolute;
+	top: 0;
+	bottom: 3.6rem; /* 2*0.6rem + 2*0.7rem + 1rem */
+	left: 0;
+	right: 0;
+	overflow-y: auto;
+	font-size: 0.8rem;
+	padding: 0 0.6rem;
+}
+.bubbles div {
+	margin: 1.2rem 0.6rem;
+	display: table;
+}
+.bubbles span.person {
+	display: table-cell;
 	text-align: right;
+	vertical-align: middle;
+	padding-right: 0.6rem;
+}
+.bubbles span.person:after {
+	content: ":";
+}
+.bubbles span.content {
+	display: table-cell;
+	text-align: left;
+	line-height: 1.5;
+}
+.bubbles span.content span {
+	display: inline-block;
+	padding: 0.6rem;
+	background: #fff;
+	border-radius: 5px;
+}
+.send {
+	position: absolute;
+	bottom: 0.6rem;
+	left: 0.6rem;
+	right: 0.6rem;
 }
 
-#start_comp {
-	display:inline-block;
-	margin-top: 1rem;
+/* Settings Window */
+
+/* Game */
+
+#game {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	position: absolute;
+	z-index: 1;
 }
 
-#result_msg {
-	margin-bottom: 0.65rem;
+@media (orientation: portrait) {
+	#game {
+		top: 1.9rem;
+		bottom: 1.9rem;
+		left: 0.1rem;
+		right: 0.1rem;
+	}
+	body.settings #game {
+		bottom: 30%;
+		bottom: calc(1.9rem + 25%);
+	}
+	body.chat #game {
+		top: 30%;
+		top: calc(1.9rem + 25%);
+	}
+}
+@media (orientation: landscape) {
+	#game {
+		left: 1.9rem;
+		right: 1.9rem;
+		top: 0.1rem;
+		bottom: 0.1rem;
+	}
+	body.settings #game {
+		right: 347px;
+		right: calc(1.9rem + 320px);
+	}
+	body.chat #game {
+		left: 347px;
+		left: calc(1.9rem + 320px);
+	}
 }
 
-/*
-	Web App FSM States:
-Show modal windows:
-		init
-		online_or_comp
-		show_url
-		wait_for_connection
-		disconnected
-		computer_settings
-No modal windows:
-		game_comp
-		game_online
-*/
+#board {
+	display: inline-block;
+	position: relative;
+	background: #DCC7AA url('res/wood.png') repeat;
+	border: 1px solid #777;
+	width: 521px;
+	height: 577px;
+	box-shadow: rgba(0, 0, 0, 0.3) 0.5px 1px 2px;
+	overflow: hidden;
+}
 
-/* When to hide the shade */
-body.game_comp #shade,
-body.game_online #shade {
-	transition: opacity linear 0.5s;
-	z-index: -20;
+body.play_local #chkNotiPush,
+body.play_local #chkNotiPush + label,
+body.play_local #btnChat,
+body.play_local #chat,
+body.play_local #selSideSkillGrp
+{
+	display: none;
+}
+
+body.play_computer #chkNotiPush,
+body.play_computer #chkNotiPush + label,
+body.play_computer #btnChat,
+body.play_computer #chat
+{
+	display: none;
+}
+
+body.play_online #btnUndo, 
+body.play_online #selSideSkillGrp {
+	display: none;
+}
+
+/* Modal */
+
+#shade {
+	position: absolute; /* Relative to view port (If user scrolls, we want the window to still be centered) */
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 100;
+	background:	#fff;
+	/* Hide Shade Normally */
+	visibility: hidden;
+	transition: all linear 0.5s;
 	opacity: 0;
 }
 
-body.results #shade {
-	/* Show Shade Normally */
-	transition: opacity linear 0.5s;
+body.shade #shade {
+	visibility: visible;
+	transition: all linear 0.5s;
 	opacity: 1;
-	z-index: 10;
 }
 
-body.online_or_comp #online_or_comp,
-body.show_url #show_url,
-body.wait_for_connection #wait_for_connection,
-body.disconnected #disconnected,
-body.computer_settings #computer_settings,
-body.results #results { /* Show popup windows */
-	/* Show windows by opacity transition alone */
-	transition: opacity 0.25s linear 0s;
-	z-index: 20;
+.modal {
+	max-height: 100%;
+	padding: 0.8rem;
+	z-index: 200;
+	text-align: center;
+	/* Hide modal windows normally */
+	display: none;
+	opacity: 0;
+}
+
+body.mod_gameselect #mod_gameselect,
+body.mod_shareurl #mod_shareurl,
+body.mod_waiting #mod_waiting,
+body.mod_disconnected #mod_disconnected,
+body.mod_computer #mod_computer,
+body.mod_gameover #mod_gameover {
+	display: block;
 	opacity: 1;
-	top: 50%;
+	animation: fadeIn 0.3s;
 }
 
-#wrap {
-	visibility: hidden;
-}
-body.game_online #wrap,
-body.game_comp #wrap {
-	visibility: visible;
+@keyframes fadeIn {
+	0% { opacity: 0; }
+	100% { opacity: 1; }
 }
 
-
-#undo_area,
-#loading_area,
-#sound_change,
-#skill_change,
-h1 {
-	visibility: hidden;
-}
-
-body.game_online #sound_change,
-body.game_online h1 {
-	visibility: visible;
-}
-
-body.game_comp #undo_area,
-body.game_comp #sound_change,
-body.game_comp #skill_change,
-body.game_comp h1 {
-	visibility: visible;
-}
-
-#sounds {
+.hide {
 	display: none;
 }
+

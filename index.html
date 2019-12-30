@@ -2,50 +2,21 @@
 <html>
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html">
-  <title>Xiangqi</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <script defer type="text/javascript" src="peerjs/peerjs.min.js"></script>
-  <script defer type="text/javascript" src="js/comm.js"></script>
-  <script defer type="text/javascript" src="js/book.js"></script>
-  <script defer type="text/javascript" src="js/position.js"></script>
-  <script defer type="text/javascript" src="js/cchess.js"></script>
-  <script defer type="text/javascript" src="js/search.js"></script>
-  <script defer type="text/javascript" src="js/board.js"></script>
-  <script defer type="text/javascript" src="js/fsm.js"></script>
-  <script defer type="text/javascript" src="js/main.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html">
+	<title>Xiangqi</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script defer src="lib/peerjs/peerjs.min.js"></script>
+	<script defer src="lib/EventTargetPolyfill.js"></script>
+	<script defer src="js/chess/book.js"></script>
+	<script defer src="js/chess/position.js"></script>
+	<script defer src="js/chess/cchess.js"></script>
+	<script defer src="js/chess/search.js"></script>
+	<script defer src="js/chess/board.js"></script>
+	<script type="module" src="js/app.js"></script>
 </head>
 
-<body>
-  <div id="wrap">
-    <div id="top_options">
-      <div id="loading_area"><img src="images/thinking.gif" width="43" height="11" alt="Loading..."/></div>
-      <h1>Xiangqi</h1>
-      <div id="undo_area">
-        <input type="button" class="button" value="Undo" onclick="retract_click()">
-      </div>
-    </div>
-
-    <div id="game">
-      <div id="board" style="width:521px;height:577px;"></div>
-    </div>
-
-    <div id="bottom_options">
-      <div id="sound_change">
-        <input type="checkbox" class="checkbox" id="chkSound" onclick="board.setSound(checked)" /><label
-          for="chkSound"> Sounds</label>
-      </div>
-      <div id="skill_change">
-        <label for="changeLevel">Computer Skill: </label>
-        <select id="changeLevel" onchange="level_change()">
-          <option selected value="0">Beginner</option>
-          <option value="1">Amateur</option>
-          <option value="2">Professional</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
+<body id="xiangqi_board_game" class="shade">
   <div style="display: none">
     <h2>Moves</h2>
     <select id="selMoveList" size="10" onchange="moveList_change()">
@@ -56,84 +27,112 @@
     <input type="button" class="button" value="Restart" onclick="restart_click()">
   </div>
 
-  <div id="shade">
-    <div id="online_or_comp" class="modal">
-      <div class="modal_border">
-        <h2>Play online or against a computer?</h2>
-        <div id="choice_area">
-        <a href="#" id="play_online" class="big_button" title="Share a link with a friend to play across the internet.">Online</a>
-         <span class="or_sep">or</span> 
-        <a href="#" id="play_computer" class="big_button" title="Play against the computer.">Computer</a>
-        </div>
-      </div>
-    </div>
-    <div id="show_url" class="modal">
-      <div class="modal_border">
-        <h2>Share this link with your opponent:</h2>
-        <div id="peer-id" style="display: none">
-          <div class="input_area">
-            <div id="share_url" class="info"></div>
-            <a id="copy_btn" role="button" href="#">Copy</a>
-          </div>
-        </div>
-        <p id="peer-server-connecting">
-          Trying to connect to PeerJS server...
-        </p>
-      </div>
-    </div>
-    <div id="wait_for_connection" class="modal">
-      <div class="modal_border">
-        <h2>Connecting...</h2>
-        <p>Connecting to your opponent.</p>
-      </div>
-    </div>
-    <div id="disconnected" class="modal">
-      <div class="modal_border">
-        <h2>Disconnected.</h2>
-        <p>Your opponent has disconnected.</p>
-      </div>
-    </div>
-    <div id="computer_settings" class="modal">
-      <div class="modal_border">
-        <h2>Who moves first?</h2>
-        <select id="selMoveMode" size="2">
-          <option selected value="0">You</option>
-          <option value="1">Computer</option>
-        </select>
-        <h2>Starting Player Handicap</h2>
-        <select id="selHandicap">
-          <option selected value="0">No handicap</option>
-          <option value="1">Remove one horse</option>
-          <option value="2">Remove both horses</option>
-          <option value="3">Remove elephants, advisors, pawns</option>
-        </select>
-        <h2>Computer Skill</h2>
-        <select id="selLevel" size="3">
-          <option selected value="0">Beginner</option>
-          <option value="1">Amateur</option>
-          <option value="2">Professional</option>
-        </select>
-        <div class="continue_area">
-          <a class="big_button" href="#" id="start_comp">Start</a>
-        </div>
-      </div>
-    </div>
-    <div id="results" class="modal">
-      <div class="modal_border">
-        <h2>Game Over</h2>
-        <p id="result_msg"></p>
-        <div class="continue_area">
-          <a href="#" id="close_result" class="big_button">Close</a>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="sidebar" id="chat">
+		<div class="messages">
+			<div id="bubbles" class="bubbles">
+			</div>
+			<div class="combo send">
+				<input type="text" id="txtMsg" class="stretch">
+				<button type="button" id="btnSendMsg">Send</button>
+			</div>
+		</div>
+	</div>
+	<button type="button" class="sidebtn" id="btnChat">
+		<span>Chat</span>
+	</button>
 
-  <div id="sounds"> <!-- Try to preload sounds -->
-    <audio preload="auto" src="sounds/capture.wav"></audio>
-    <audio preload="auto" src="sounds/check.wav"></audio>
-    <audio preload="auto" src="sounds/move.wav"></audio>
-  </div>
+	<div id="game">
+		<div id="loading_area"><img src="res/thinking.gif" width="43" height="11" alt="Loading..."/></div>
+		<div id="board" style="width:521px;height:577px;"></div>
+	</div>
+
+	<button type="button" class="sidebtn" id="btnSettings">
+		<span>Controls</span>
+	</button>
+	<div class="sidebar" id="settings">
+		<fieldset id="optsGame">
+			<legend>Game</legend>
+			<input type="checkbox" id="chkBoardSize">
+			<label for="chkBoardSize"><span class="switch"><span class="slider"></span></span>Limit Width</label>
+			<button type="button" id="btnUndo">Undo</button>
+			<div class="selgrp" id="selSideSkillGrp">
+				<label for="selSideSkill">Computer Skill:</label>
+				<select id="selSideSkill">
+					<option selected="" value="0">Beginner</option>
+					<option value="1">Amateur</option>
+					<option value="2">Professional</option>
+				</select>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>Notifications</legend>
+			<input type="checkbox" id="chkNotiSound">
+			<label for="chkNotiSound"><span class="switch"><span class="slider"></span></span>Sound</label>
+			<input type="checkbox" id="chkNotiPush">
+			<label for="chkNotiPush"><span class="switch"><span class="slider"></span></span>Push Notifications</label>
+		</fieldset>
+	</div>
+
+
+	<div id="shade">
+		<div class="modal" id="mod_gameselect">
+			<h2>Players</h2>
+			<button type="button" id="btnOnline">Human vs. Human (online)</button>
+			<button type="button" id="btnLocal">Human vs. Human (local)</button>
+			<button type="button" id="btnComputer">Human vs Computer</button>
+		</div>
+		<div class="modal" id="mod_shareurl">
+			<h2>Connect</h2>
+			<p>Share this link with your opponent:</p>
+			<div id="peerShow" class="combo hide">
+				<div id="msgUrl" class="stretch"></div>
+				<button type="button" id="btnCopyUrl">Copy</button>
+			</div>	
+			<p id="peerWait">
+				Trying to connect to PeerJS server...
+			</p>
+		</div>
+		<div class="modal" id="mod_waiting">
+			<h2>Connecting...</h2>
+			<p>Connecting to your opponent.</p>
+		</div>
+		<div class="modal" id="mod_disconnected">
+			<h2>Disconnected.</h2>
+			<p>Your opponent has disconnected.</p>
+		</div>
+		<div class="modal" id="mod_computer">
+			<h2>First Move</h2>
+			<select id="selFirstMove" size="2">
+				<option selected value="0">You</option>
+				<option value="1">Computer</option>
+			</select>
+			<h2>Starting Player Handicap</h2>
+			<select id="selHandicap">
+				<option selected value="0">No handicap</option>
+				<option value="1">Remove one horse</option>
+				<option value="2">Remove both horses</option>
+				<option value="3">Remove elephants, advisors, pawns</option>
+			</select>
+			<h2>Computer Skill</h2>
+			<select id="selSkill" size="3">
+				<option selected value="0">Beginner</option>
+				<option value="1">Amateur</option>
+				<option value="2">Professional</option>
+			</select>
+			<button type="button" id="btnComputerStart">Play</button>
+		</div>
+		<div class="modal" id="mod_gameover">
+			<h2>Game Over</h2>
+			<p id="msgResult"></p>
+			<button type="button" id="btnCloseGameover">Close</button>
+		</div>
+	</div>
+
+	<div style="display:none"> <!-- Try to preload sounds -->
+		<audio preload="auto" controls="none" src="res/capture.wav" id="sndCapture"></audio>
+		<audio preload="auto" controls="none" src="res/check.wav" id="sndCheck"></audio>
+		<audio preload="auto" controls="none" src="res/move.wav" id="sndMove"></audio>
+	</div>
 </body>
 
 </html>
