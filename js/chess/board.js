@@ -20,49 +20,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-"use strict";
+const RESOURCES = 'res/';
 
-var gameTitle = 'Xiangqi';
-function blinkTitle(message) {
-  var intervalID = null;
+const RESULT_UNKNOWN = 0;
+const RESULT_WIN = 1;
+const RESULT_DRAW = 2;
+const RESULT_LOSS = 3;
 
-  function blink() {
-    document.title = document.title == message ? gameTitle : message;
-  }
-  function clear() {
-    if (intervalID !== null) {
-      clearInterval(intervalID);
-    }
-    intervalID = null;
-    document.title = gameTitle;
-    window.onmousemove = null;
-  };
-
-  clear();
-  blink();
-  intervalID = setInterval(blink, 1000);
-  window.onmousemove = function () {
-    if (document.hasFocus()) {
-      clear();
-    }
-  }
-};
-
-var RESULT_UNKNOWN = 0;
-var RESULT_WIN = 1;
-var RESULT_DRAW = 2;
-var RESULT_LOSS = 3;
-
-var BOARD_WIDTH = 521;
-var BOARD_HEIGHT = 577;
-var SQUARE_SIZE = 57;
-var SQUARE_LEFT = (BOARD_WIDTH - SQUARE_SIZE * 9) >> 1;
-var SQUARE_TOP = (BOARD_HEIGHT - SQUARE_SIZE * 10) >> 1;
-var THINKING_SIZE = 32;
-var THINKING_LEFT = (BOARD_WIDTH - THINKING_SIZE) >> 1;
-var THINKING_TOP = (BOARD_HEIGHT - THINKING_SIZE) >> 1;
-var MAX_STEP = 8;
-var PIECE_NAME = [
+const BOARD_WIDTH = 521;
+const BOARD_HEIGHT = 577;
+const SQUARE_SIZE = 57;
+const SQUARE_LEFT = (BOARD_WIDTH - SQUARE_SIZE * 9) >> 1;
+const SQUARE_TOP = (BOARD_HEIGHT - SQUARE_SIZE * 10) >> 1;
+const THINKING_SIZE = 32;
+const THINKING_LEFT = (BOARD_WIDTH - THINKING_SIZE) >> 1;
+const THINKING_TOP = (BOARD_HEIGHT - THINKING_SIZE) >> 1;
+const MAX_STEP = 8;
+const PIECE_NAME = [
   "oo", null, null, null, null, null, null, null,
   "rk", "ra", "rb", "rn", "rr", "rc", "rp", null,
   "bk", "ba", "bb", "bn", "br", "bc", "bp", null,
@@ -80,408 +54,400 @@ function MOVE_PX(src, dst, step) {
   return Math.floor((src * step + dst * (MAX_STEP - step)) / MAX_STEP + .5) + "px";
 }
 
-function modal_alert(message) {
-  const body = document.getElementsByTagName("BODY")[0];
-  body.className += ' results';
-  const msgEl = document.getElementById('result_msg');
-  msgEl.innerHTML = message;
-}
+const STARTUP_FEN = [
+  "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w",
+  "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w",
+  "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w",
+  "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w",
+];
 
-function Board(container, images, sounds, thinking) {
-  this.images = images;
-  this.sounds = sounds;
-  this.pos = new Position();
-  this.pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1");
-  this.animated = true;
-  this.sound = false;
-  this.search = null;
-  this.imgSquares = [];
-  this.sqSelected = 0;
-  this.mvLast = 0;
-  this.millis = 0;
-  this.online = false;
-  this.computer = -1;
-  this.result = RESULT_UNKNOWN;
-  this.busy = false;
-  this.gameover = false;
+export default class Board extends EventTarget {
+    constructor(element, computer, online, handicap) {
+      super();
+      this.online = online;
+      this.computer = computer;
 
-  this.soundFiles = {
-    capture: new Audio(this.sounds + 'capture' + ".wav"),
-    check: new Audio(this.sounds + 'check' + ".wav"),
-    move: new Audio(this.sounds + 'move' + ".wav")
-  };
-
-  var style = container.style;
-  style.position = "relative";
-  style.width = BOARD_WIDTH + "px";
-  style.height = BOARD_HEIGHT + "px";
-  style.backgroundImage = "url(" + images + "board.svg)";
-  var this_ = this;
-  for (var sq = 0; sq < 256; sq ++) {
-    if (!IN_BOARD(sq)) {
-      this.imgSquares.push(null);
-      continue;
-    }
-    var img = document.createElement("img");
-    img.setAttribute('draggable', true);
-    img.setAttribute('width', SQUARE_SIZE);
-    img.setAttribute('height', SQUARE_SIZE);
-    var style = img.style;
-    style.position = "absolute";
-    style.left = SQ_X(sq) + 'px';
-    style.top = SQ_Y(sq) + 'px';
-    style.width = SQUARE_SIZE + 'px';
-    style.height = SQUARE_SIZE + 'px';
-    style.zIndex = 0;
-    img.onmousedown = function(sq_) {
-      return function(evt) {
-        this_.clickSquare(sq_);
-      }
-    } (sq);
-    img.ondragstart = function(evt) {
-      this.style.opacity = 0;
-    }
-    img.ondragend = function(evt) {
-      this.style.opacity = 1;
-    }
-    img.ondragover = function (evt) {
-      evt.preventDefault();
-    }
-    img.ondrop = function (sq_) {
-      return function(evt) {
-        evt.preventDefault();
-        var saveAnimate = this_.animated; // Disable animation when dragging and dropping.
-        this_.animated = false;
-        this_.clickSquare(sq_);
-        this_.animated = saveAnimate;
-      }
-    } (sq);
-    container.appendChild(img);
-    this.imgSquares.push(img);
-  }
-
-  this.thinking = thinking;
-  // this.thinking.src = images + "thinking.gif";
-  // style = this.thinking.style;
-  // style.visibility = "hidden";
-  // style.position = "absolute";
-  // style.left = THINKING_LEFT + "px";
-  // style.top = THINKING_TOP + "px";
-  // container.appendChild(this.thinking);
-
-  this.dummy = document.createElement("div");
-  this.dummy.style.position = "absolute";
-  container.appendChild(this.dummy);
-
-  this.flushBoard();
-}
-
-Board.prototype.playSound = function(soundFile) {
-  if (!this.sound) {
-    return;
-  }
-  this.soundFiles[soundFile].play();
-}
-
-Board.prototype.setSearch = function(hashLevel) {
-  this.search = hashLevel == 0 ? null : new Search(this.pos, hashLevel);
-}
-
-Board.prototype.flipped = function(sq) {
-  return this.computer == 0 ? SQUARE_FLIP(sq) : sq;
-}
-
-Board.prototype.computerMove = function() {
-  return this.pos.sdPlayer == this.computer;
-}
-
-Board.prototype.computerLastMove = function() {
-  return 1 - this.pos.sdPlayer == this.computer;
-}
-
-Board.prototype.addMove = function(mv, computerMove) {
-  if (!this.pos.legalMove(mv)) {
-    return;
-  }
-  if (!this.pos.makeMove(mv)) {
-    // this.playSound("illegal");
-    return;
-  }
-  this.busy = true;
-
-  if (!computerMove && this.online) { // Send move to online player
-    comm_send('Move', mv);
-  }
-
-  if (!this.animated) {
-    this.postAddMove(mv, computerMove);
-    return;
-  }
-
-  var sqSrc = this.flipped(SRC(mv));
-  var xSrc = SQ_X(sqSrc);
-  var ySrc = SQ_Y(sqSrc);
-  var sqDst = this.flipped(DST(mv));
-  var xDst = SQ_X(sqDst);
-  var yDst = SQ_Y(sqDst);
-  var style = this.imgSquares[sqSrc].style;
-  style.zIndex = 256;
-  var step = MAX_STEP - 1;
-  var this_ = this;
-  var timer = setInterval(function() {
-    if (step == 0) {
-      clearInterval(timer);
-      style.left = xSrc + "px";
-      style.top = ySrc + "px";
-      style.zIndex = 0;
-      this_.postAddMove(mv, computerMove);
-    } else {
-      style.left = MOVE_PX(xSrc, xDst, step);
-      style.top = MOVE_PX(ySrc, yDst, step);
-      step --;
-    }
-  }, 16);
-}
-
-Board.prototype.postAddMove = function(mv, computerMove) {
-  if (this.mvLast > 0) {
-    this.drawSquare(SRC(this.mvLast), false);
-    this.drawSquare(DST(this.mvLast), false);
-  }
-  this.drawSquare(SRC(mv), true);
-  this.drawSquare(DST(mv), true);
-  this.sqSelected = 0;
-  this.mvLast = mv;
-
-  if (this.pos.isMate()) {
-    this.playSound("check");
-    if (computerMove && board.online) {
-      blinkTitle('Checkmate!');
-    }
-    this.result = computerMove ? RESULT_LOSS : RESULT_WIN;
-    this.gameover = true;
-
-    var pc = SIDE_TAG(this.pos.sdPlayer) + PIECE_KING;
-    var sqMate = 0;
-    for (var sq = 0; sq < 256; sq ++) {
-      if (this.pos.squares[sq] == pc) {
-        sqMate = sq;
-        break;
-      }
-    }
-    if (!this.animated || sqMate == 0) {
-      this.postMate(computerMove);
-      return;
-    }
-
-    sqMate = this.flipped(sqMate);
-    var style = this.imgSquares[sqMate].style;
-    style.zIndex = 256;
-    var xMate = SQ_X(sqMate);
-    var step = MAX_STEP;
-    var this_ = this;
-    var timer = setInterval(function() {
-      if (step == 0) {
-        clearInterval(timer);
-        style.left = xMate + "px";
+      this.pos = new Position();
+      this.pos.fromFen(STARTUP_FEN[handicap]);
+      this.animated = true;
+      this.search = null;
+      this.imgSquares = [];
+      this.sqSelected = 0;
+      this.mvLast = 0;
+      this.millis = 0;
+      this.result = RESULT_UNKNOWN;
+      this.busy = false;
+      this.gameover = false;
+    
+      var style = element.style;
+      style.position = "relative";
+      style.width = BOARD_WIDTH + "px";
+      style.height = BOARD_HEIGHT + "px";
+      style.backgroundImage = "url(" + RESOURCES + "board.svg)";
+      var this_ = this;
+      for (var sq = 0; sq < 256; sq ++) {
+        if (!IN_BOARD(sq)) {
+          this.imgSquares.push(null);
+          continue;
+        }
+        var img = document.createElement("img");
+        img.setAttribute('draggable', true);
+        img.setAttribute('width', SQUARE_SIZE);
+        img.setAttribute('height', SQUARE_SIZE);
+        var style = img.style;
+        style.position = "absolute";
+        style.left = SQ_X(sq) + 'px';
+        style.top = SQ_Y(sq) + 'px';
+        style.width = SQUARE_SIZE + 'px';
+        style.height = SQUARE_SIZE + 'px';
         style.zIndex = 0;
-        this_.imgSquares[sqMate].src = this_.images +
-            (this_.pos.sdPlayer == 0 ? "r" : "b") + "km.svg";
-        this_.postMate(computerMove);
-      } else {
-        style.left = (xMate + ((step & 1) == 0 ? step : -step) * 2) + "px";
-        step --;
+        img.onmousedown = function(sq_) {
+          return function(evt) {
+            this_.clickSquare(sq_);
+          }
+        } (sq);
+        img.ondragstart = function(evt) {
+          this.style.opacity = 0;
+        }
+        img.ondragend = function(evt) {
+          this.style.opacity = 1;
+        }
+        img.ondragover = function (evt) {
+          evt.preventDefault();
+        }
+        img.ondrop = function (sq_) {
+          return function(evt) {
+            evt.preventDefault();
+            var saveAnimate = this_.animated; // Disable animation when dragging and dropping.
+            this_.animated = false;
+            this_.clickSquare(sq_);
+            this_.animated = saveAnimate;
+          }
+        } (sq);
+        element.appendChild(img);
+        this.imgSquares.push(img);
       }
-    }, 50);
-    return;
-  }
+    
+      this.thinking = new Image(43, 11);
+      this.thinking.alt = "Thinking...";
+      this.thinking.src = RESOURCES + 'thinking.gif';
+      this.thinking.style.position = 'absolute';
+      this.thinking.style.left = THINKING_LEFT + "px";
+      this.thinking.style.top = THINKING_TOP + "px";
+      this.thinking.style.display = 'none';
+      element.appendChild(this.thinking);
+    
+      this.dummy = document.createElement("div");
+      this.dummy.style.position = "absolute";
+      element.appendChild(this.dummy);
+    
+      this.flushBoard();
+    }
+    
+    
+    setSearch(hashLevel) {
+      this.search = (hashLevel == 0) ? null : new Search(this.pos, hashLevel);
+      console.log(this.search);
+    }
+    
+    flipped(sq) {
+      return (this.computer == 0) ? SQUARE_FLIP(sq) : sq;
+    }
+    
+    computerMove() {
+      return this.pos.sdPlayer == this.computer;
+    }
+    
+    computerLastMove() {
+      return 1 - this.pos.sdPlayer == this.computer;
+    }
+    
+    addMove(mv, computerMove) {
+      if (!this.pos.legalMove(mv) || !this.pos.makeMove(mv)) {
+        return;
+      }
+      this.busy = true;
+    
+      if (!this.animated) {
+        this.postAddMove(mv, computerMove);
+        return;
+      }
+    
+      var sqSrc = this.flipped(SRC(mv));
+      var xSrc = SQ_X(sqSrc);
+      var ySrc = SQ_Y(sqSrc);
+      var sqDst = this.flipped(DST(mv));
+      var xDst = SQ_X(sqDst);
+      var yDst = SQ_Y(sqDst);
+      var style = this.imgSquares[sqSrc].style;
+      style.zIndex = 256;
+      var step = MAX_STEP - 1;
+      var this_ = this;
+      var timer = setInterval(function() {
+        if (step == 0) {
+          clearInterval(timer);
+          style.left = xSrc + "px";
+          style.top = ySrc + "px";
+          style.zIndex = 0;
+          this_.postAddMove(mv, computerMove);
+        } else {
+          style.left = MOVE_PX(xSrc, xDst, step);
+          style.top = MOVE_PX(ySrc, yDst, step);
+          step --;
+        }
+      }, 16);
+    }
+    
+    postAddMove(mv, computerMove) {
+      if (this.mvLast > 0) {
+        this.drawSquare(SRC(this.mvLast), false);
+        this.drawSquare(DST(this.mvLast), false);
+      }
+      this.drawSquare(SRC(mv), true);
+      this.drawSquare(DST(mv), true);
+      this.sqSelected = 0;
+      this.mvLast = mv;
+    
 
-  var vlRep = this.pos.repStatus(3);
-  if (vlRep > 0) {
-    vlRep = this.pos.repValue(vlRep);
-    if (vlRep > -WIN_VALUE && vlRep < WIN_VALUE) {
-      // this.playSound("draw");
-      this.result = RESULT_DRAW;
-      modal_alert("Draw from repetition!");
-    } else if (computerMove == (vlRep < 0)) {
-      // this.playSound("loss");
-      this.result = RESULT_LOSS;
-      modal_alert("You lose, but please don't give up!");
-    } else {
-      // this.playSound("win");
-      this.result = RESULT_WIN;
-      modal_alert("Congratulations on your win!");
-    }
-    if (computerMove && board.online) {
-      blinkTitle('Gameover!');
-    }
-    this.postAddMove2();
-    this.busy = false;
-    return;
-  }
+      let moveDetails = {
+        move: mv,
+        isComputer: computerMove,
+        check: false,
+        capture: false
+      };
+    
+      if (this.pos.isMate()) {
+        this.result = computerMove ? RESULT_LOSS : RESULT_WIN;
+        this.gameover = true;
+    
+        var pc = SIDE_TAG(this.pos.sdPlayer) + PIECE_KING;
+        var sqMate = 0;
+        for (var sq = 0; sq < 256; sq ++) {
+          if (this.pos.squares[sq] == pc) {
+            sqMate = sq;
+            break;
+          }
+        }
 
-  if (this.pos.captured()) {
-    var hasMaterial = false;
-    for (var sq = 0; sq < 256; sq ++) {
-      if (IN_BOARD(sq) && (this.pos.squares[sq] & 7) > 2) {
-        hasMaterial = true;
-        break;
+        if (computerMove || this.computer == -1) {
+          moveDetails.check = true;
+        }
+        this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
+        // dispatchEvent 'gameover' is in postMate()
+
+        // Choose to animate king
+        if (!this.animated || sqMate == 0) {
+          this.postMate(computerMove);
+          return;
+        }
+        sqMate = this.flipped(sqMate);
+        var style = this.imgSquares[sqMate].style;
+        style.zIndex = 256;
+        var xMate = SQ_X(sqMate);
+        var step = MAX_STEP;
+        var this_ = this;
+        var timer = setInterval(function() {
+          if (step == 0) {
+            clearInterval(timer);
+            style.left = xMate + "px";
+            style.zIndex = 0;
+            this_.imgSquares[sqMate].src = RESOURCES +
+                (this_.pos.sdPlayer == 0 ? "r" : "b") + "km.svg";
+            this_.postMate(computerMove);
+          } else {
+            style.left = (xMate + ((step & 1) == 0 ? step : -step) * 2) + "px";
+            step --;
+          }
+        }, 50);
+        return;
+      }
+    
+      var vlRep = this.pos.repStatus(3);
+      if (vlRep > 0) {
+        let msg;
+        vlRep = this.pos.repValue(vlRep);
+        if (vlRep > -WIN_VALUE && vlRep < WIN_VALUE) {
+          this.result = RESULT_DRAW;
+          msg = "Draw from repetition!";
+        } else if (computerMove == (vlRep < 0)) {
+          this.result = RESULT_LOSS;
+          msg = "You lose, but please don't give up!";
+        } else {
+          this.result = RESULT_WIN;
+          msg = "Congratulations on your win!";
+        }
+        let gameoverDetails = {
+          checkmate: false,
+          message: msg
+        };
+        this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
+        this.dispatchEvent(new CustomEvent('gameover', { detail: gameoverDetails }));
+        this.postAddMove2();
+        this.busy = false;
+        return;
+      }
+    
+      if (this.pos.captured()) {
+        var hasMaterial = false;
+        for (var sq = 0; sq < 256; sq ++) {
+          if (IN_BOARD(sq) && (this.pos.squares[sq] & 7) > 2) {
+            hasMaterial = true;
+            break;
+          }
+        }
+        if (!hasMaterial) {
+          this.result = RESULT_DRAW;
+          let gameoverDetails = {
+            checkmate: false,
+            message: "Draw! Neither side has any offensive pieces."
+          };
+          this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
+          this.dispatchEvent(new CustomEvent('gameover', { detail: gameoverDetails }));
+          this.postAddMove2();
+          this.busy = false;
+          return;
+        }
+      } else if (this.pos.pcList.length > 100) {
+        var captured = false;
+        for (var i = 2; i <= 100; i ++) {
+          if (this.pos.pcList[this.pos.pcList.length - i] > 0) {
+            captured = true;
+            break;
+          }
+        }
+        if (!captured) {
+          this.result = RESULT_DRAW;
+          let gameoverDetails = {
+            checkmate: false,
+            message: "Draw!"
+          };
+          this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
+          this.dispatchEvent(new CustomEvent('gameover', { detail: gameoverDetails }));
+          this.postAddMove2();
+          this.busy = false;
+          return;
+        }
+      }
+    
+      if (this.pos.inCheck() && (computerMove || this.computer == -1)) {
+        moveDetails.check = true;
+      } 
+      else {
+        if (this.pos.captured()) {
+          moveDetails.capture = true;
+        }
+      }
+
+      this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
+    
+      this.postAddMove2();
+      this.response();
+    }
+    
+    postAddMove2() {
+      if (typeof this.onAddMove == "function") {
+        this.onAddMove();
       }
     }
-    if (!hasMaterial) {
-      // this.playSound("draw");
-      this.result = RESULT_DRAW;
-      modal_alert("Draw! Neither side has any offensive pieces.");
-      if (computerMove && board.online) {
-        blinkTitle('Gameover!');
-      }
+    
+    postMate(computerMove) {
+      let gameoverDetails = {
+        checkmate: true,
+        message: computerMove ? "You lose, but keep up the good work!" : "Congratulations on your victory!"
+      };
+      this.dispatchEvent(new CustomEvent('gameover', { detail: gameoverDetails }));
       this.postAddMove2();
       this.busy = false;
-      return;
     }
-  } else if (this.pos.pcList.length > 100) {
-    var captured = false;
-    for (var i = 2; i <= 100; i ++) {
-      if (this.pos.pcList[this.pos.pcList.length - i] > 0) {
-        captured = true;
-        break;
+    
+    response() {
+      if (!this.computerMove()) { // player's move
+          this.busy = false;
+          return;
+      }
+      else if (this.online) { // online game, opponent's move
+          this.busy = true;
+          return;
+      }
+      else if (this.search == null) { // local game
+        this.busy = false;
+        return;
+      }
+      // Computer game, computer's move
+      this.busy = true; // Should have already happened, but stay busy until computer makes a move
+      this.thinking.style.display = "inline-block";
+      var this_ = this;
+      setTimeout(function() {
+        this_.addMove(this_.search.searchMain(LIMIT_DEPTH, this_.millis), true);
+        this_.thinking.style.display = "none";
+      }, 250);
+    }
+    
+    clickSquare(sq_) {
+      if (this.busy || this.result != RESULT_UNKNOWN) {
+        return;
+      }
+      var sq = this.flipped(sq_);
+      var pc = this.pos.squares[sq];
+      if ((pc & SIDE_TAG(this.pos.sdPlayer)) != 0) {
+        if (this.mvLast != 0) {
+          this.drawSquare(SRC(this.mvLast), false);
+          this.drawSquare(DST(this.mvLast), false);
+        }
+        if (this.sqSelected) {
+          this.drawSquare(this.sqSelected, false);
+        }
+        this.drawSquare(sq, true);
+        this.sqSelected = sq;
+      } else if (this.sqSelected > 0) {
+        this.addMove(MOVE(this.sqSelected, sq), false);
       }
     }
-    if (!captured) {
-      // this.playSound("draw");
-      this.result = RESULT_DRAW;
-      modal_alert("Draw!");
-      if (computerMove && board.online) {
-        blinkTitle('Gameover!');
+    
+    drawSquare(sq, selected) {
+      var img = this.imgSquares[this.flipped(sq)];
+      var name = PIECE_NAME[this.pos.squares[sq]];
+      if (name === 'oo') {
+        img.src = RESOURCES + name + ".gif";
       }
-      this.postAddMove2();
-      this.busy = false;
-      return;
+      else {
+        img.src = RESOURCES + name + ".svg";
+      }
+      img.style.backgroundImage = selected ? "url(" + RESOURCES + "oos.svg)" : "";
     }
-  }
-
-  if (this.pos.inCheck() && computerMove) {
-    if (board.online) {
-      blinkTitle('Check!');
+    
+    flushBoard() {
+      this.mvLast = this.pos.mvList[this.pos.mvList.length - 1];
+      for (var sq = 0; sq < 256; sq ++) {
+        if (IN_BOARD(sq)) {
+          this.drawSquare(sq, sq == SRC(this.mvLast) || sq == DST(this.mvLast));
+        }
+      }
     }
-    this.playSound("check");
-  } 
-  else {
-    if (this.pos.captured()) {
-      this.playSound("capture");
-    } else {
-      this.playSound("move");
+    
+    restart(fen) {
+      if (this.busy) {
+        return;
+      }
+      this.result = RESULT_UNKNOWN;
+      this.pos.fromFen(fen);
+      this.flushBoard();
+      this.response();
     }
-    if (computerMove && board.online) {
-      blinkTitle('Your move!');
+    
+    retract() {
+      if (this.busy) {
+        return;
+      }
+      this.result = RESULT_UNKNOWN;
+      if (this.pos.mvList.length > 1) {
+        this.pos.undoMakeMove();
+      }
+      if (this.pos.mvList.length > 1 && this.computerMove()) {
+          console.log(this.computer, this.computerMove());
+        this.pos.undoMakeMove();
+      }
+      this.flushBoard();
+      this.response();
     }
-  }
-
-  this.postAddMove2();
-  this.response();
-}
-
-Board.prototype.postAddMove2 = function() {
-  if (typeof this.onAddMove == "function") {
-    this.onAddMove();
-  }
-}
-
-Board.prototype.postMate = function(computerMove) {
-  modal_alert(computerMove ? "You lose, but keep up the good work!" : "Congratulations on your victory!");
-  this.postAddMove2();
-  this.busy = false;
-}
-
-Board.prototype.response = function() {
-  if (this.search == null || !this.computerMove()) {
-    this.busy = false;
-    return;
-  }
-  this.busy = true;
-  if (!board.online) { // If this is not an online game, have computer generate a move.
-    this.thinking.style.visibility = "visible";
-    var this_ = this;
-    setTimeout(function() {
-      this_.addMove(board.search.searchMain(LIMIT_DEPTH, board.millis), true);
-      this_.thinking.style.visibility = "hidden";
-    }, 250);
-  }
-}
-
-Board.prototype.onlineMove = function(mv) {
-  this.addMove(mv, true);
-}
-
-Board.prototype.clickSquare = function(sq_) {
-  if (this.busy || this.result != RESULT_UNKNOWN) {
-    return;
-  }
-  var sq = this.flipped(sq_);
-  var pc = this.pos.squares[sq];
-  if ((pc & SIDE_TAG(this.pos.sdPlayer)) != 0) {
-    // this.playSound("click");
-    if (this.mvLast != 0) {
-      this.drawSquare(SRC(this.mvLast), false);
-      this.drawSquare(DST(this.mvLast), false);
-    }
-    if (this.sqSelected) {
-      this.drawSquare(this.sqSelected, false);
-    }
-    this.drawSquare(sq, true);
-    this.sqSelected = sq;
-  } else if (this.sqSelected > 0) {
-    this.addMove(MOVE(this.sqSelected, sq), false);
-  }
-}
-
-Board.prototype.drawSquare = function(sq, selected) {
-  var img = this.imgSquares[this.flipped(sq)];
-  var name = PIECE_NAME[this.pos.squares[sq]];
-  if (name === 'oo') {
-    img.src = this.images + name + ".gif";
-  }
-  else {
-    img.src = this.images + name + ".svg";
-  }
-  img.style.backgroundImage = selected ? "url(" + this.images + "oos.svg)" : "";
-}
-
-Board.prototype.flushBoard = function() {
-  this.mvLast = this.pos.mvList[this.pos.mvList.length - 1];
-  for (var sq = 0; sq < 256; sq ++) {
-    if (IN_BOARD(sq)) {
-      this.drawSquare(sq, sq == SRC(this.mvLast) || sq == DST(this.mvLast));
-    }
-  }
-}
-
-Board.prototype.restart = function(fen) {
-  if (this.busy) {
-    return;
-  }
-  this.result = RESULT_UNKNOWN;
-  this.pos.fromFen(fen);
-  this.flushBoard();
-  // this.playSound("newgame");
-  this.response();
-}
-
-Board.prototype.retract = function() {
-  if (this.busy) {
-    return;
-  }
-  this.result = RESULT_UNKNOWN;
-  if (this.pos.mvList.length > 1) {
-    this.pos.undoMakeMove();
-  }
-  if (this.pos.mvList.length > 1 && this.computerMove()) {
-    this.pos.undoMakeMove();
-  }
-  this.flushBoard();
-  this.response();
-}
-
-Board.prototype.setSound = function(sound) {
-  this.sound = sound;
 }

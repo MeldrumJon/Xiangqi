@@ -1,6 +1,7 @@
 import * as notify from './notify.js';
 import * as storage from './storage.js';
 import PeerCom from './PeerCom.js';
+import Board from './chess/board.js';
 
 const elBody = document.getElementById('xiangqi_board_game');
 
@@ -18,7 +19,7 @@ const elSndMove = document.getElementById('sndMove');
 // Forms
 const elBtnOnline = document.getElementById('btnOnline');
 const elBtnLocal = document.getElementById('btnLocal');
-const elBtnComputer = document.getElementById('btnLocal');
+const elBtnComputer = document.getElementById('btnComputer');
 
 const elBtnCloseGameover = document.getElementById('btnCloseGameover');
 const elBtnCopyUrl = document.getElementById('btnCopyUrl');
@@ -87,15 +88,64 @@ let main = function () {
 
     let board = null;
 
-    let start = function () {
-        //elBody.classList.add(board.online ? 'play_online' : 'play_local');
+    let start = function (online, firstMove, local=false, handicap=0, skill=0) {
+        let type = (local) ? -1 : (firstMove) ? 1 : 0;
+
+        board = new Board(elBoard, type, online, handicap);
+
+        if (!online && !local) { // vs. computer
+            board.setSearch(16);
+            board.millis = Math.pow(10, skill + 1);
+            board.response();
+        }
+
+        let onmove = function(evt) {
+            let move = evt.detail;
+            console.log(board.pos.mvList);
+            if (board.online) {
+                if (!move.isComputer) {
+                    peerCom.send('Move', move);
+                }
+                else {
+                    if (move.check) {
+                        notify.flashTitle('Check!');
+                    }
+                    else {
+                        notify.flashTitle('Your move!');
+                    }
+                }
+            }
+            if (storage.getItem('notiSound') === 'enabled') {
+                if (move.check) { notify.playSound(elSndCheck); }
+                else if (move.capture) { notify.playSound(elSndCapture); }
+                else { notify.playSound(elSndMove); }
+            }
+        };
+        board.addEventListener('move', onmove);
+
+        let ongameover = function(evt) {
+            let details = evt.detail;
+            if (board.online) {
+                if (details.checkmate) {
+                    notify.flashTitle('Checkmate!');
+                }
+                else {
+                    notify.flashTitle('Gameover!');
+                }
+            }
+            elMsgResult.innerHTML = details.message;
+            showModal('mod_gameover');
+        };
+        board.addEventListener('gameover', ongameover);
+
+        let cls = (local) ? 'play_local' : (online) ? 'play_online' : 'play_computer';
+        elBody.classList.add(cls);
     }
 
     // DOM
     let resize = function () {
         let availWidth = elGame.clientWidth;
         let availHeight = elGame.clientHeight;
-
 
         // Pay attention to aspect ratio
         // use AvailHeight and availWidth to calculate board width/height
@@ -115,7 +165,9 @@ let main = function () {
     //resize(); // Not necessary because of setBoardSize() below
 
     let skillChange = function (evt) {
-        console.log('TODO: set skill in both controls and modals', evt);
+        let skill = evt.target.selectedIndex;
+        elSelSkill.options[skill].selected = true;
+        elSelSideSkill.options[skill].selected = true;
     };
     elSelSkill.addEventListener('change', skillChange);
     elSelSideSkill.addEventListener('change', skillChange);
@@ -125,9 +177,16 @@ let main = function () {
     });
 
     elBtnLocal.addEventListener('click', function () {
-        // TODO: Start local game
-        //board = new GoBoard(elBoard, uiGridSize, false, 'black');
-        start();
+        start(false, true, true);
+        hideModals();
+    });
+
+    elBtnComputer.addEventListener('click', function() {
+        showModal('mod_computer');
+    });
+
+    elBtnComputerStart.addEventListener('click', function() {
+        start(false, 1 - elSelFirstMove.selectedIndex, false, elSelHandicap.selectedIndex, elSelSkill.selectedIndex);
         hideModals();
     });
 
@@ -159,7 +218,6 @@ let main = function () {
 
     elBtnSendMsg.addEventListener('click', function() {
         let msg = elTxtMsg.value;
-        console.log(msg);
         elTxtMsg.value = '';
         if (msg.replace(/\s/g, '').length) {
             peerCom.send('Message', msg);
@@ -181,7 +239,7 @@ let main = function () {
     });
 
     elBtnUndo.addEventListener('click', function (evt) {
-        if (board) { board.undo(); }
+        if (board) { board.retract(); }
     });
 
     let setBoardSize = function () {
@@ -250,18 +308,15 @@ let main = function () {
         console.log('A peer connected');
 
         if (!peerId) { // New game
-            // TODO: start online game
-            //board = new GoBoard(elBoard, uiGridSize, true, 'black');
-            start();
+            start(true, true);
             hideModals();
         }
         peerId = evt.detail;
 
         if (board) { // Send start signal to peer
             peerCom.send('Start', {
-                //gridSize: board.gridSize,
-                //player: (board.player === 'black') ? 'white' : 'black',
-                //pastMoves: board.movesList
+                type: board.computer,
+                moves: board.pos.mvList
             });
         }
 
@@ -279,31 +334,17 @@ let main = function () {
     // Peer2Peer Data
     // Games Start / Reconnect
     peerCom.addReceiveHandler('Start', function (obj) {
-        // TODO: start online game and catch up moves
-        //board = new GoBoard(elBoard, obj.gridSize, true, obj.player);
-        //for (let i = 0, len = obj.pastMoves.length; i < len; ++i) {
-        //    let move = obj.pastMoves[i];
-        //    if (move.pass) {
-        //        board.pass(move.color);
-        //    }
-        //    else {
-        //        board.play(move.color, move.x, move.y);
-        //    }
-        //}
+        start(true, !obj.type);
+        for (let i = 1, len = obj.moves.length; i < len; ++i) {
+            board.addMove(obj.moves[i], board.computerMove());
+        }
         hideModals();
-        start();
     });
 
     // Move
     let notiMove = null;
     peerCom.addReceiveHandler('Move', function (move) {
-        // TODO: set up move handler
-        //if (move.pass) {
-        //    if (board) { board.pass(move.color); }
-        //}
-        //else {
-        //    if (board) { board.play(move.color, move.x, move.y); }
-        //}
+        board.addMove(move.move, true);
         if (!document.hasFocus()) {
             if (storage.getItem('notiPush') === 'enabled') {
                 // We should check for gameover here

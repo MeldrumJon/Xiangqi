@@ -42,7 +42,6 @@
 	</button>
 
 	<div id="game">
-		<div id="loading_area"><img src="res/thinking.gif" width="43" height="11" alt="Loading..."/></div>
 		<div id="board" style="width:521px;height:577px;"></div>
 	</div>
 
@@ -79,7 +78,7 @@
 			<h2>Players</h2>
 			<button type="button" id="btnOnline">Human vs. Human (online)</button>
 			<button type="button" id="btnLocal">Human vs. Human (local)</button>
-			<button type="button" id="btnComputer">Human vs Computer</button>
+			<button type="button" id="btnComputer">Human vs. Computer</button>
 		</div>
 		<div class="modal" id="mod_shareurl">
 			<h2>Connect</h2>
@@ -101,24 +100,35 @@
 			<p>Your opponent has disconnected.</p>
 		</div>
 		<div class="modal" id="mod_computer">
-			<h2>First Move</h2>
+			<h2>Settings</h2>
+			<p>
+			<fieldset>
+			<legend>First Move</legend>
 			<select id="selFirstMove" size="2">
 				<option selected value="0">You</option>
 				<option value="1">Computer</option>
 			</select>
-			<h2>Starting Player Handicap</h2>
+			</fieldset>
+			<fieldset>
+			<legend>Computer Skill</legend>
+			<select id="selSkill" size="3">
+				<option selected value="0">Beginner</option>
+				<option value="1">Amateur</option>
+				<option value="2">Professional</option>
+			</select>
+			</fieldset>
+			</p>
+			<p>
+			<fieldset>
+			<legend>Starting Player Handicap</legend>
 			<select id="selHandicap">
 				<option selected value="0">No handicap</option>
 				<option value="1">Remove one horse</option>
 				<option value="2">Remove both horses</option>
 				<option value="3">Remove elephants, advisors, pawns</option>
 			</select>
-			<h2>Computer Skill</h2>
-			<select id="selSkill" size="3">
-				<option selected value="0">Beginner</option>
-				<option value="1">Amateur</option>
-				<option value="2">Professional</option>
-			</select>
+			</fieldset>
+			</p>
 			<button type="button" id="btnComputerStart">Play</button>
 		</div>
 		<div class="modal" id="mod_gameover">
