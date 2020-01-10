@@ -244,11 +244,11 @@ const PUZZLE_LIST = [
 export default function test() {
   let pos = new Position();
   let legal = 0, gened = 0, moved = 0, check = 0;
-  for (let i = 0; i < PUZZLE_LIST.length; i ++) {
+  for (let i = 0; i < PUZZLE_LIST.length; ++i) {
     pos.fromFen(PUZZLE_LIST[i]);
-    for (let sqSrc = 0; sqSrc < 256; sqSrc ++) {
+    for (let sqSrc = 0; sqSrc < 256; ++sqSrc) {
       if (IN_BOARD(sqSrc)) {
-        for (let sqDst = 0; sqDst < 256; sqDst ++) {
+        for (let sqDst = 0; sqDst < 256; ++sqDst) {
           if (IN_BOARD(sqDst)) {
             legal += (pos.legalMove(MOVE(sqSrc, sqDst)) ? 1 : 0);
           }
@@ -256,9 +256,9 @@ export default function test() {
       }
     }
     let mvs = pos.generateMoves(null);
-    for (let j = 0; j < mvs.length; j ++) {
+    for (let j = 0; j < mvs.length; ++j) {
       if (pos.makeMove(mvs[j])) {
-        moved ++;
+        ++moved;
         check += (pos.inCheck() ? 1 : 0);
         pos.undoMakeMove();
       }

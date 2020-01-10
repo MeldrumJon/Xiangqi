@@ -57,10 +57,6 @@ function SQ_Y(sq) {
   return (RANK_Y(sq) - 3);
 }
 
-function MOVE_PX(src, dst, step) {
-  return Math.floor((src * step + dst * (MAX_STEP - step)) / MAX_STEP + .5) + "px";
-}
-
 export default class Board extends EventTarget {
     constructor(element, computer, online, handicap) {
       super();
@@ -145,7 +141,7 @@ export default class Board extends EventTarget {
 
       this.imgSquares = [];
       let elImgs = document.createElement('div');
-      for (let sq = 0; sq < 256; sq++) {
+      for (let sq = 0; sq < 256; ++sq) {
         if (!IN_BOARD(sq)) {
           this.imgSquares.push(null);
           continue;
@@ -262,7 +258,7 @@ export default class Board extends EventTarget {
 
       srcStyle.zIndex = 256;
       let anim = function() {
-          if (steps === 0) {
+          if (!steps) {
               this.postAddMove(mv, computerMove);
               srcStyle.left = srcX + 'px';
               srcStyle.top = srcY + 'px';
@@ -306,27 +302,26 @@ export default class Board extends EventTarget {
         this.result = computerMove ? RESULT_LOSS : RESULT_WIN;
         this.gameover = true;
     
-        var pc = SIDE_TAG(this.pos.sdPlayer) + PIECE_KING;
-        var sqMate = 0;
-        for (var sq = 0; sq < 256; sq ++) {
-          if (this.pos.squares[sq] == pc) {
+        let pc = SIDE_TAG(this.pos.sdPlayer) + PIECE_KING;
+        let sqMate = 0;
+        for (let sq = 0; sq < 256; ++sq) {
+          if (this.pos.squares[sq] === pc) {
             sqMate = sq;
             break;
           }
         }
 
-        if (computerMove || this.computer == -1) {
+        if (computerMove || this.computer === -1) {
           moveDetails.check = true;
         }
         this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
         // dispatchEvent 'gameover' is in postMate()
 
-        // Choose to animate king
-        if (sqMate == 0) {
+        if (!sqMate) {
           this.postMate(computerMove);
           return;
         }
-        else if (!this.animated) {
+        else if (!this.animated) { // Choose to animate king
           sqMate = this.flipped(sqMate);
           this.imgSquares[sqMate].src = RESOURCES + 
               (this.pos.sdPlayer == 0 ? "r" : "b") + "km.svg";
@@ -357,7 +352,7 @@ export default class Board extends EventTarget {
         return;
       }
     
-      var vlRep = this.pos.repStatus(3);
+      let vlRep = this.pos.repStatus(3);
       if (vlRep > 0) {
         let msg;
         vlRep = this.pos.repValue(vlRep);
@@ -382,8 +377,8 @@ export default class Board extends EventTarget {
       }
     
       if (this.pos.captured()) {
-        var hasMaterial = false;
-        for (var sq = 0; sq < 256; sq ++) {
+        let hasMaterial = false;
+        for (let sq = 0; sq < 256; ++sq) {
           if (IN_BOARD(sq) && (this.pos.squares[sq] & 7) > 2) {
             hasMaterial = true;
             break;
@@ -401,8 +396,8 @@ export default class Board extends EventTarget {
           return;
         }
       } else if (this.pos.pcList.length > 100) {
-        var captured = false;
-        for (var i = 2; i <= 100; i ++) {
+        let captured = false;
+        for (let i = 2; i <= 100; ++i) {
           if (this.pos.pcList[this.pos.pcList.length - i] > 0) {
             captured = true;
             break;
@@ -421,7 +416,7 @@ export default class Board extends EventTarget {
         }
       }
     
-      if (this.pos.inCheck() && (computerMove || this.computer == -1)) {
+      if (this.pos.inCheck() && (computerMove || this.computer === -1)) {
         moveDetails.check = true;
       } 
       else {
@@ -453,7 +448,7 @@ export default class Board extends EventTarget {
           this.busy = true;
           return;
       }
-      else if (this.search == null) { // local game
+      else if (!this.search) { // local game
         this.busy = false;
         return;
       }
@@ -468,13 +463,13 @@ export default class Board extends EventTarget {
     }
     
     clickSquare(sq_) {
-      if (this.busy || this.result != RESULT_UNKNOWN) {
+      if (this.busy || this.result !== RESULT_UNKNOWN) {
         return;
       }
-      var sq = this.flipped(sq_);
-      var pc = this.pos.squares[sq];
-      if ((pc & SIDE_TAG(this.pos.sdPlayer)) != 0) {
-        if (this.mvLast != 0) {
+      let sq = this.flipped(sq_);
+      let pc = this.pos.squares[sq];
+      if ((pc & SIDE_TAG(this.pos.sdPlayer)) !== 0) {
+        if (this.mvLast !== 0) {
           this.drawSquare(SRC(this.mvLast), false);
           this.drawSquare(DST(this.mvLast), false);
         }
@@ -489,8 +484,8 @@ export default class Board extends EventTarget {
     }
     
     drawSquare(sq, selected) {
-      var img = this.imgSquares[this.flipped(sq)];
-      var name = PIECE_NAME[this.pos.squares[sq]];
+      let img = this.imgSquares[this.flipped(sq)];
+      let name = PIECE_NAME[this.pos.squares[sq]];
       if (name === 'oo') {
         img.src = RESOURCES + name + ".gif";
       }
@@ -502,7 +497,7 @@ export default class Board extends EventTarget {
     
     flushBoard() {
       this.mvLast = this.pos.mvList[this.pos.mvList.length - 1];
-      for (var sq = 0; sq < 256; sq ++) {
+      for (let sq = 0; sq < 256; ++sq) {
         if (IN_BOARD(sq)) {
           this.drawSquare(sq, sq == SRC(this.mvLast) || sq == DST(this.mvLast));
         }

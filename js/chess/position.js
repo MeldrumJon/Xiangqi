@@ -23,13 +23,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 "use strict";
 
 function binarySearch(vlss, vl) {
-  var low = 0;
-  var high = vlss.length - 1;
+  let low = 0;
+  let high = DAT_LEN - 1;
   while (low <= high) {
-    var mid = (low + high) >> 1;
-    if (vlss[mid][0] < vl) {
+    let mid = (low + high) >> 1;
+    if (vlss(mid, 0) < vl) {
       low = mid + 1;
-    } else if (vlss[mid][0] > vl) {
+    } else if (vlss(mid, 0) > vl) {
       high = mid - 1;
     } else {
       return mid;
@@ -38,31 +38,31 @@ function binarySearch(vlss, vl) {
   return -1;
 }
 
-var MATE_VALUE = 10000;
-var BAN_VALUE = MATE_VALUE - 100;
-var WIN_VALUE = MATE_VALUE - 200;
-var NULL_SAFE_MARGIN = 400;
-var NULL_OKAY_MARGIN = 200;
-var DRAW_VALUE = 20;
-var ADVANCED_VALUE = 3;
+const MATE_VALUE = 10000;
+const BAN_VALUE = MATE_VALUE - 100;
+const WIN_VALUE = MATE_VALUE - 200;
+const NULL_SAFE_MARGIN = 400;
+const NULL_OKAY_MARGIN = 200;
+const DRAW_VALUE = 20;
+const ADVANCED_VALUE = 3;
 
-var PIECE_KING = 0;
-var PIECE_ADVISOR = 1;
-var PIECE_BISHOP = 2;
-var PIECE_KNIGHT = 3;
-var PIECE_ROOK = 4;
-var PIECE_CANNON = 5;
-var PIECE_PAWN = 6;
+const PIECE_KING = 0;
+const PIECE_ADVISOR = 1;
+const PIECE_BISHOP = 2;
+const PIECE_KNIGHT = 3;
+const PIECE_ROOK = 4;
+const PIECE_CANNON = 5;
+const PIECE_PAWN = 6;
 
-var RANK_TOP = 3;
-var RANK_BOTTOM = 12;
-var FILE_LEFT = 3;
-var FILE_RIGHT = 11;
+const RANK_TOP = 3;
+const RANK_BOTTOM = 12;
+const FILE_LEFT = 3;
+const FILE_RIGHT = 11;
 
-var ADD_PIECE = false;
-var DEL_PIECE = true;
+const ADD_PIECE = false;
+const DEL_PIECE = true;
 
-var IN_BOARD_ = [
+const IN_BOARD_ = new Uint8Array([
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -79,9 +79,9 @@ var IN_BOARD_ = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-];
+]);
 
-var IN_FORT_ = [
+const IN_FORT_ = new Uint8Array([
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -98,9 +98,9 @@ var IN_FORT_ = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-];
+]);
 
-var LEGAL_SPAN = [
+const LEGAL_SPAN = new Uint8Array([
                        0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -134,9 +134,9 @@ var LEGAL_SPAN = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0,
-];
+]);
 
-var KNIGHT_PIN_ = [
+const KNIGHT_PIN_ = new Int16Array([
                               0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -170,16 +170,16 @@ var KNIGHT_PIN_ = [
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,
-];
+]);
 
-var KING_DELTA = [-16, -1, 1, 16];
-var ADVISOR_DELTA = [-17, -15, 15, 17];
-var KNIGHT_DELTA = [[-33, -31], [-18, 14], [-14, 18], [31, 33]];
-var KNIGHT_CHECK_DELTA = [[-33, -18], [-31, -14], [14, 31], [18, 33]];
-var MVV_VALUE = [50, 10, 10, 30, 40, 30, 20, 0];
+const KING_DELTA = [-16, -1, 1, 16];
+const ADVISOR_DELTA = [-17, -15, 15, 17];
+const KNIGHT_DELTA = [[-33, -31], [-18, 14], [-14, 18], [31, 33]];
+const KNIGHT_CHECK_DELTA = [[-33, -18], [-31, -14], [14, 31], [18, 33]];
+const MVV_VALUE = [50, 10, 10, 30, 40, 30, 20, 0];
 
-var PIECE_VALUE = [
-  [
+const PIECE_VALUE = [
+  new Uint16Array([
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -196,7 +196,7 @@ var PIECE_VALUE = [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ], [
+  ]), new Uint16Array([
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -213,7 +213,7 @@ var PIECE_VALUE = [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ], [
+  ]), new Uint16Array([
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -230,7 +230,7 @@ var PIECE_VALUE = [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ], [
+  ]), new Uint16Array([
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -247,7 +247,7 @@ var PIECE_VALUE = [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ], [
+  ]), new Uint16Array([
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -264,7 +264,7 @@ var PIECE_VALUE = [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ], [
+  ]), new Uint16Array([
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -281,7 +281,7 @@ var PIECE_VALUE = [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ], [
+  ]), new Uint16Array([
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -298,15 +298,15 @@ var PIECE_VALUE = [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ],
+  ])
 ];
 
 function IN_BOARD(sq) {
-  return IN_BOARD_[sq] != 0;
+  return IN_BOARD_[sq];
 }
 
 function IN_FORT(sq) {
-  return IN_FORT_[sq] != 0;
+  return IN_FORT_[sq];
 }
 
 function RANK_Y(sq) {
@@ -342,15 +342,15 @@ function SQUARE_FORWARD(sq, sd) {
 }
 
 function KING_SPAN(sqSrc, sqDst) {
-  return LEGAL_SPAN[sqDst - sqSrc + 256] == 1;
+  return LEGAL_SPAN[sqDst - sqSrc + 256] === 1;
 }
 
 function ADVISOR_SPAN(sqSrc, sqDst) {
-  return LEGAL_SPAN[sqDst - sqSrc + 256] == 2;
+  return LEGAL_SPAN[sqDst - sqSrc + 256] === 2;
 }
 
 function BISHOP_SPAN(sqSrc, sqDst) {
-  return LEGAL_SPAN[sqDst - sqSrc + 256] == 3;
+  return LEGAL_SPAN[sqDst - sqSrc + 256] === 3;
 }
 
 function BISHOP_PIN(sqSrc, sqDst) {
@@ -362,23 +362,23 @@ function KNIGHT_PIN(sqSrc, sqDst) {
 }
 
 function HOME_HALF(sq, sd) {
-  return (sq & 0x80) != (sd << 7);
+  return (sq & 0x80) !== (sd << 7);
 }
 
 function AWAY_HALF(sq, sd) {
-  return (sq & 0x80) == (sd << 7);
+  return (sq & 0x80) === (sd << 7);
 }
 
 function SAME_HALF(sqSrc, sqDst) {
-  return ((sqSrc ^ sqDst) & 0x80) == 0;
+  return ((sqSrc ^ sqDst) & 0x80) === 0;
 }
 
 function SAME_RANK(sqSrc, sqDst) {
-  return ((sqSrc ^ sqDst) & 0xf0) == 0;
+  return ((sqSrc ^ sqDst) & 0xf0) === 0;
 }
 
 function SAME_FILE(sqSrc, sqDst) {
-  return ((sqSrc ^ sqDst) & 0x0f) == 0;
+  return ((sqSrc ^ sqDst) & 0x0f) === 0;
 }
 
 function SIDE_TAG(sd) {
@@ -417,7 +417,7 @@ function ASC(c) {
   return c.charCodeAt(0);
 }
 
-var FEN_PIECE = "        KABNRCP kabnrcp ";
+const FEN_PIECE = "        KABNRCP kabnrcp ";
 
 function CHAR_TO_PIECE(c) {
   switch (c) {
@@ -445,18 +445,18 @@ function CHAR_TO_PIECE(c) {
 function RC4(key) {
   this.x = this.y = 0;
   this.state = [];
-  for (var i = 0; i < 256; i ++) {
+  for (let i = 0; i < 256; ++i) {
     this.state.push(i);
   }
-  var j = 0;
-  for (var i = 0; i < 256; i ++) {
+  let j = 0;
+  for (let i = 0; i < 256; ++i) {
     j = (j + this.state[i] + key[i % key.length]) & 0xff;
     this.swap(i, j);
   }
 }
 
 RC4.prototype.swap = function(i, j) {
-  var t = this.state[i];
+  let t = this.state[i];
   this.state[i] = this.state[j];
   this.state[j] = t;
 }
@@ -465,32 +465,32 @@ RC4.prototype.nextByte = function() {
   this.x = (this.x + 1) & 0xff;
   this.y = (this.y + this.state[this.x]) & 0xff;
   this.swap(this.x, this.y);
-  var t = (this.state[this.x] + this.state[this.y]) & 0xff;
+  let t = (this.state[this.x] + this.state[this.y]) & 0xff;
   return this.state[t];
 }
 
 RC4.prototype.nextLong = function() {
-  var n0 = this.nextByte();
-  var n1 = this.nextByte();
-  var n2 = this.nextByte();
-  var n3 = this.nextByte();
+  let n0 = this.nextByte();
+  let n1 = this.nextByte();
+  let n2 = this.nextByte();
+  let n3 = this.nextByte();
   return n0 + (n1 << 8) + (n2 << 16) + ((n3 << 24) & 0xffffffff);
 }
 
-var PreGen_zobristKeyPlayer, PreGen_zobristLockPlayer;
-var PreGen_zobristKeyTable = [], PreGen_zobristLockTable = [];
+let rc4 = new RC4([0]);
 
-var rc4 = new RC4([0]);
-PreGen_zobristKeyPlayer = rc4.nextLong();
+const PreGen_zobristKeyPlayer = rc4.nextLong();
 rc4.nextLong();
-PreGen_zobristLockPlayer = rc4.nextLong();
-for (var i = 0; i < 14; i ++) {
-  var keys = [];
-  var locks = [];
-  for (var j = 0; j < 256; j ++) {
-    keys.push(rc4.nextLong());
+const PreGen_zobristLockPlayer = rc4.nextLong();
+
+const PreGen_zobristKeyTable = [], PreGen_zobristLockTable = [];
+for (let i = 0; i < 14; ++i) {
+  let keys = new Int32Array(256);
+  let locks = new Int32Array(256);
+  for (let j = 0; j < 256; ++j) {
+    keys[j] = rc4.nextLong();
     rc4.nextLong();
-    locks.push(rc4.nextLong());
+    locks[j] = rc4.nextLong();
   }
   PreGen_zobristKeyTable.push(keys);
   PreGen_zobristLockTable.push(locks);
@@ -504,7 +504,7 @@ function Position() {
 Position.prototype.clearBoard = function() {
   this.sdPlayer = 0;
   this.squares = [];
-  for (var sq = 0; sq < 256; sq ++) {
+  for (let sq = 0; sq < 256; ++sq) {
     this.squares.push(0);
   }
   this.zobristKey = this.zobristLock = 0;
@@ -520,7 +520,7 @@ Position.prototype.setIrrev = function() {
 }
 
 Position.prototype.addPiece = function(sq, pc, bDel) {
-  var pcAdjust;
+  let pcAdjust;
   this.squares[sq] = bDel ? 0 : pc;
   if (pc < 16) {
     pcAdjust = pc - 8;
@@ -537,9 +537,9 @@ Position.prototype.addPiece = function(sq, pc, bDel) {
 }
 
 Position.prototype.movePiece = function(mv) {
-  var sqSrc = SRC(mv);
-  var sqDst = DST(mv);
-  var pc = this.squares[sqDst];
+  let sqSrc = SRC(mv);
+  let sqDst = DST(mv);
+  let pc = this.squares[sqDst];
   this.pcList.push(pc);
   if (pc > 0) {
     this.addPiece(sqDst, pc, DEL_PIECE);
@@ -551,10 +551,10 @@ Position.prototype.movePiece = function(mv) {
 }
 
 Position.prototype.undoMovePiece = function() {
-  var mv = this.mvList.pop();
-  var sqSrc = SRC(mv);
-  var sqDst = DST(mv);
-  var pc = this.squares[sqDst];
+  let mv = this.mvList.pop();
+  let sqSrc = SRC(mv);
+  let sqDst = DST(mv);
+  let pc = this.squares[sqDst];
   this.addPiece(sqDst, pc, DEL_PIECE);
   this.addPiece(sqSrc, pc, ADD_PIECE);
   pc = this.pcList.pop();
@@ -570,7 +570,7 @@ Position.prototype.changeSide = function() {
 }
 
 Position.prototype.makeMove = function(mv) {
-  var zobristKey = this.zobristKey;
+  let zobristKey = this.zobristKey;
   this.movePiece(mv);
   if (this.checked()) {
     this.undoMovePiece(mv);
@@ -579,7 +579,7 @@ Position.prototype.makeMove = function(mv) {
   this.keyList.push(zobristKey);
   this.changeSide();
   this.chkList.push(this.checked());
-  this.distance ++;
+  ++this.distance;
   return true;
 }
 
@@ -597,7 +597,7 @@ Position.prototype.nullMove = function() {
   this.keyList.push(this.zobristKey);
   this.changeSide();
   this.chkList.push(false);
-  this.distance ++;
+  ++this.distance;
 }
 
 Position.prototype.undoNullMove = function() {
@@ -611,18 +611,18 @@ Position.prototype.undoNullMove = function() {
 
 Position.prototype.fromFen = function(fen) {
   this.clearBoard();
-  var y = RANK_TOP;
-  var x = FILE_LEFT;
-  var index = 0;
-  if (index == fen.length) {
+  let y = RANK_TOP;
+  let x = FILE_LEFT;
+  let index = 0;
+  if (!fen.length) {
     this.setIrrev();
     return;
   }
-  var c = fen.charAt(index);
-  while (c != " ") {
-    if (c == "/") {
+  let c = fen.charAt(index);
+  while (c !== " ") {
+    if (c === "/") {
       x = FILE_LEFT;
-      y ++;
+      ++y;
       if (y > RANK_BOTTOM) {
         break;
       }
@@ -630,45 +630,45 @@ Position.prototype.fromFen = function(fen) {
       x += (ASC(c) - ASC("0"));
     } else if (c >= "A" && c <= "Z") {
       if (x <= FILE_RIGHT) {
-        var pt = CHAR_TO_PIECE(c);
+        let pt = CHAR_TO_PIECE(c);
         if (pt >= 0) {
           this.addPiece(COORD_XY(x, y), pt + 8);
         }
-        x ++;
+        ++x;
       }
     } else if (c >= "a" && c <= "z") {
       if (x <= FILE_RIGHT) {
-        var pt = CHAR_TO_PIECE(CHR(ASC(c) + ASC("A") - ASC("a")));
+        let pt = CHAR_TO_PIECE(CHR(ASC(c) + ASC("A") - ASC("a")));
         if (pt >= 0) {
           this.addPiece(COORD_XY(x, y), pt + 16);
         }
-        x ++;
+        ++x;
       }
     }
-    index ++;
-    if (index == fen.length) {
+    ++index;
+    if (index === fen.length) {
       this.setIrrev();
       return;
     }
     c = fen.charAt(index);
   }
-  index ++;
-  if (index == fen.length) {
+  ++index;
+  if (index === fen.length) {
     this.setIrrev();
     return;
   }
-  if (this.sdPlayer == (fen.charAt(index) == "b" ? 0 : 1)) {
+  if (this.sdPlayer === (fen.charAt(index) === "b" ? 0 : 1)) {
     this.changeSide();
   }
   this.setIrrev();
 }
 
 Position.prototype.toFen = function() {
-  var fen = "";
-  for (var y = RANK_TOP; y <= RANK_BOTTOM; y ++) {
-    var k = 0;
-    for (var x = FILE_LEFT; x <= FILE_RIGHT; x ++) {
-      var pc = this.squares[COORD_XY(x, y)];
+  let fen = "";
+  for (let y = RANK_TOP; y <= RANK_BOTTOM; ++y) {
+    let k = 0;
+    for (let x = FILE_LEFT; x <= FILE_RIGHT; ++x) {
+      let pc = this.squares[COORD_XY(x, y)];
       if (pc > 0) {
         if (k > 0) {
           fen += CHR(ASC("0") + k);
@@ -676,7 +676,7 @@ Position.prototype.toFen = function() {
         }
         fen += FEN_PIECE.charAt(pc);
       } else {
-        k ++;
+        ++k;
       }
     }
     if (k > 0) {
@@ -685,89 +685,89 @@ Position.prototype.toFen = function() {
     fen += "/";
   }
   return fen.substring(0, fen.length - 1) +
-      (this.sdPlayer == 0 ? " w" : " b");
+      (this.sdPlayer === 0 ? " w" : " b");
 }
 
 Position.prototype.generateMoves = function(vls) {
-  var mvs = [];
-  var pcSelfSide = SIDE_TAG(this.sdPlayer);
-  var pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
-  for (var sqSrc = 0; sqSrc < 256; sqSrc ++) {
-    var pcSrc = this.squares[sqSrc];
-    if ((pcSrc & pcSelfSide) == 0) {
+  let mvs = [];
+  let pcSelfSide = SIDE_TAG(this.sdPlayer);
+  let pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
+  for (let sqSrc = 0; sqSrc < 256; ++sqSrc) {
+    let pcSrc = this.squares[sqSrc];
+    if ((pcSrc & pcSelfSide) === 0) {
       continue;
     }
     switch (pcSrc - pcSelfSide) {
     case PIECE_KING:
-      for (var i = 0; i < 4; i ++) {
-        var sqDst = sqSrc + KING_DELTA[i];
+      for (let i = 0; i < 4; ++i) {
+        let sqDst = sqSrc + KING_DELTA[i];
         if (!IN_FORT(sqDst)) {
           continue;
         }
-        var pcDst = this.squares[sqDst];
-        if (vls == null) {
-          if ((pcDst & pcSelfSide) == 0) {
+        let pcDst = this.squares[sqDst];
+        if (vls === null) {
+          if ((pcDst & pcSelfSide) === 0) {
             mvs.push(MOVE(sqSrc, sqDst));
           }
-        } else if ((pcDst & pcOppSide) != 0) {
+        } else if ((pcDst & pcOppSide) !== 0) {
           mvs.push(MOVE(sqSrc, sqDst));
           vls.push(MVV_LVA(pcDst, 5));
         }
       }
       break;
     case PIECE_ADVISOR:
-      for (var i = 0; i < 4; i ++) {
-        var sqDst = sqSrc + ADVISOR_DELTA[i];
+      for (let i = 0; i < 4; ++i) {
+        let sqDst = sqSrc + ADVISOR_DELTA[i];
         if (!IN_FORT(sqDst)) {
           continue;
         }
-        var pcDst = this.squares[sqDst];
-        if (vls == null) {
-          if ((pcDst & pcSelfSide) == 0) {
+        let pcDst = this.squares[sqDst];
+        if (vls === null) {
+          if ((pcDst & pcSelfSide) === 0) {
             mvs.push(MOVE(sqSrc, sqDst));
           }
-        } else if ((pcDst & pcOppSide) != 0) {
+        } else if ((pcDst & pcOppSide) !== 0) {
           mvs.push(MOVE(sqSrc, sqDst));
           vls.push(MVV_LVA(pcDst, 1));
         }
       }
       break;
     case PIECE_BISHOP:
-      for (var i = 0; i < 4; i ++) {
-        var sqDst = sqSrc + ADVISOR_DELTA[i];
+      for (let i = 0; i < 4; ++i) {
+        let sqDst = sqSrc + ADVISOR_DELTA[i];
         if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, this.sdPlayer) &&
-            this.squares[sqDst] == 0)) {
+            this.squares[sqDst] === 0)) {
           continue;
         }
         sqDst += ADVISOR_DELTA[i];
-        var pcDst = this.squares[sqDst];
-        if (vls == null) {
-          if ((pcDst & pcSelfSide) == 0) {
+        let pcDst = this.squares[sqDst];
+        if (vls === null) {
+          if ((pcDst & pcSelfSide) === 0) {
             mvs.push(MOVE(sqSrc, sqDst));
           }
-        } else if ((pcDst & pcOppSide) != 0) {
+        } else if ((pcDst & pcOppSide) !== 0) {
           mvs.push(MOVE(sqSrc, sqDst));
           vls.push(MVV_LVA(pcDst, 1));
         }
       }
       break;
     case PIECE_KNIGHT:
-      for (var i = 0; i < 4; i ++) {
-        var sqDst = sqSrc + KING_DELTA[i];
+      for (let i = 0; i < 4; ++i) {
+        let sqDst = sqSrc + KING_DELTA[i];
         if (this.squares[sqDst] > 0) {
           continue;
         }
-        for (var j = 0; j < 2; j ++) {
+        for (let j = 0; j < 2; ++j) {
           sqDst = sqSrc + KNIGHT_DELTA[i][j];
           if (!IN_BOARD(sqDst)) {
             continue;
           }
-          var pcDst = this.squares[sqDst];
-          if (vls == null) {
-            if ((pcDst & pcSelfSide) == 0) {
+          let pcDst = this.squares[sqDst];
+          if (vls === null) {
+            if ((pcDst & pcSelfSide) === 0) {
               mvs.push(MOVE(sqSrc, sqDst));
             }
-          } else if ((pcDst & pcOppSide) != 0) {
+          } else if ((pcDst & pcOppSide) !== 0) {
             mvs.push(MOVE(sqSrc, sqDst));
             vls.push(MVV_LVA(pcDst, 1));
           }
@@ -775,19 +775,19 @@ Position.prototype.generateMoves = function(vls) {
       }
       break;
     case PIECE_ROOK:
-      for (var i = 0; i < 4; i ++) {
-        var delta = KING_DELTA[i];
-        var sqDst = sqSrc + delta;
+      for (let i = 0; i < 4; ++i) {
+        let delta = KING_DELTA[i];
+        let sqDst = sqSrc + delta;
         while (IN_BOARD(sqDst)) {
-          var pcDst = this.squares[sqDst];
-          if (pcDst == 0) {
-            if (vls == null) {
+          let pcDst = this.squares[sqDst];
+          if (pcDst === 0) {
+            if (vls === null) {
               mvs.push(MOVE(sqSrc, sqDst));
             }
           } else {
-            if ((pcDst & pcOppSide) != 0) {
+            if ((pcDst & pcOppSide) !== 0) {
               mvs.push(MOVE(sqSrc, sqDst));
-              if (vls != null) {
+              if (vls !== null) {
                 vls.push(MVV_LVA(pcDst, 4));
               }
             }
@@ -798,13 +798,13 @@ Position.prototype.generateMoves = function(vls) {
       }
       break;
     case PIECE_CANNON:
-      for (var i = 0; i < 4; i ++) {
-        var delta = KING_DELTA[i];
-        var sqDst = sqSrc + delta;
+      for (let i = 0; i < 4; ++i) {
+        let delta = KING_DELTA[i];
+        let sqDst = sqSrc + delta;
         while (IN_BOARD(sqDst)) {
-          var pcDst = this.squares[sqDst];
-          if (pcDst == 0) {
-            if (vls == null) {
+          let pcDst = this.squares[sqDst];
+          if (pcDst === 0) {
+            if (vls === null) {
               mvs.push(MOVE(sqSrc, sqDst));
             }
           } else {
@@ -814,11 +814,11 @@ Position.prototype.generateMoves = function(vls) {
         }
         sqDst += delta;
         while (IN_BOARD(sqDst)) {
-          var pcDst = this.squares[sqDst];
+          let pcDst = this.squares[sqDst];
           if (pcDst > 0) {
-            if ((pcDst & pcOppSide) != 0) {
+            if ((pcDst & pcOppSide) !== 0) {
               mvs.push(MOVE(sqSrc, sqDst));
-              if (vls != null) {
+              if (vls !== null) {
                 vls.push(MVV_LVA(pcDst, 4));
               }
             }
@@ -829,28 +829,28 @@ Position.prototype.generateMoves = function(vls) {
       }
       break;
     case PIECE_PAWN:
-      var sqDst = SQUARE_FORWARD(sqSrc, this.sdPlayer);
+      let sqDst = SQUARE_FORWARD(sqSrc, this.sdPlayer);
       if (IN_BOARD(sqDst)) {
-        var pcDst = this.squares[sqDst];
-        if (vls == null) {
-          if ((pcDst & pcSelfSide) == 0) {
+        let pcDst = this.squares[sqDst];
+        if (vls === null) {
+          if ((pcDst & pcSelfSide) === 0) {
             mvs.push(MOVE(sqSrc, sqDst));
           }
-        } else if ((pcDst & pcOppSide) != 0) {
+        } else if ((pcDst & pcOppSide) !== 0) {
           mvs.push(MOVE(sqSrc, sqDst));
           vls.push(MVV_LVA(pcDst, 2));
         }
       }
       if (AWAY_HALF(sqSrc, this.sdPlayer)) {
-        for (var delta = -1; delta <= 1; delta += 2) {
+        for (let delta = -1; delta <= 1; delta += 2) {
           sqDst = sqSrc + delta;
           if (IN_BOARD(sqDst)) {
-            var pcDst = this.squares[sqDst];
-            if (vls == null) {
-              if ((pcDst & pcSelfSide) == 0) {
+            let pcDst = this.squares[sqDst];
+            if (vls === null) {
+              if ((pcDst & pcSelfSide) === 0) {
                 mvs.push(MOVE(sqSrc, sqDst));
               }
-            } else if ((pcDst & pcOppSide) != 0) {
+            } else if ((pcDst & pcOppSide) !== 0) {
               mvs.push(MOVE(sqSrc, sqDst));
               vls.push(MVV_LVA(pcDst, 2));
             }
@@ -864,19 +864,20 @@ Position.prototype.generateMoves = function(vls) {
 }
 
 Position.prototype.legalMove = function(mv) {
-  var sqSrc = SRC(mv);
-  var pcSrc = this.squares[sqSrc];
-  var pcSelfSide = SIDE_TAG(this.sdPlayer);
-  if ((pcSrc & pcSelfSide) == 0) {
+  let sqSrc = SRC(mv);
+  let pcSrc = this.squares[sqSrc];
+  let pcSelfSide = SIDE_TAG(this.sdPlayer);
+  if ((pcSrc & pcSelfSide) === 0) {
     return false;
   }
 
-  var sqDst = DST(mv);
-  var pcDst = this.squares[sqDst];
-  if ((pcDst & pcSelfSide) != 0) {
+  let sqDst = DST(mv);
+  let pcDst = this.squares[sqDst];
+  if ((pcDst & pcSelfSide) !== 0) {
     return false;
   }
 
+  let sqPin;
   switch (pcSrc - pcSelfSide) {
   case PIECE_KING:
     return IN_FORT(sqDst) && KING_SPAN(sqSrc, sqDst);
@@ -884,13 +885,13 @@ Position.prototype.legalMove = function(mv) {
     return IN_FORT(sqDst) && ADVISOR_SPAN(sqSrc, sqDst);
   case PIECE_BISHOP:
     return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) &&
-        this.squares[BISHOP_PIN(sqSrc, sqDst)] == 0;
+        this.squares[BISHOP_PIN(sqSrc, sqDst)] === 0;
   case PIECE_KNIGHT:
-    var sqPin = KNIGHT_PIN(sqSrc, sqDst);
-    return sqPin != sqSrc && this.squares[sqPin] == 0;
+    sqPin = KNIGHT_PIN(sqSrc, sqDst);
+    return sqPin !== sqSrc && this.squares[sqPin] === 0;
   case PIECE_ROOK:
   case PIECE_CANNON:
-    var delta;
+    let delta;
     if (SAME_RANK(sqSrc, sqDst)) {
       delta = (sqDst < sqSrc ? -1 : 1);
     } else if (SAME_FILE(sqSrc, sqDst)) {
@@ -898,64 +899,64 @@ Position.prototype.legalMove = function(mv) {
     } else {
       return false;
     }
-    var sqPin = sqSrc + delta;
-    while (sqPin != sqDst && this.squares[sqPin] == 0) {
+    sqPin = sqSrc + delta;
+    while (sqPin !== sqDst && this.squares[sqPin] === 0) {
       sqPin += delta;
     }
-    if (sqPin == sqDst) {
-      return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
+    if (sqPin === sqDst) {
+      return pcDst === 0 || pcSrc - pcSelfSide === PIECE_ROOK;
     }
-    if (pcDst == 0 || pcSrc - pcSelfSide != PIECE_CANNON) {
+    if (pcDst === 0 || pcSrc - pcSelfSide !== PIECE_CANNON) {
       return false;
     }
     sqPin += delta;
-    while (sqPin != sqDst && this.squares[sqPin] == 0) {
+    while (sqPin !== sqDst && this.squares[sqPin] === 0) {
       sqPin += delta;
     }
-    return sqPin == sqDst;
+    return sqPin === sqDst;
   case PIECE_PAWN:
-    if (AWAY_HALF(sqDst, this.sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
+    if (AWAY_HALF(sqDst, this.sdPlayer) && (sqDst === sqSrc - 1 || sqDst === sqSrc + 1)) {
       return true;
     }
-    return sqDst == SQUARE_FORWARD(sqSrc, this.sdPlayer);
+    return sqDst === SQUARE_FORWARD(sqSrc, this.sdPlayer);
   default:
     return false;
   }
 }
 
 Position.prototype.checked = function() {
-  var pcSelfSide = SIDE_TAG(this.sdPlayer);
-  var pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
-  for (var sqSrc = 0; sqSrc < 256; sqSrc ++) {
-    if (this.squares[sqSrc] != pcSelfSide + PIECE_KING) {
+  let pcSelfSide = SIDE_TAG(this.sdPlayer);
+  let pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
+  for (let sqSrc = 0; sqSrc < 256; ++sqSrc) {
+    if (this.squares[sqSrc] !== pcSelfSide + PIECE_KING) {
       continue;
     }
-    if (this.squares[SQUARE_FORWARD(sqSrc, this.sdPlayer)] == pcOppSide + PIECE_PAWN) {
+    if (this.squares[SQUARE_FORWARD(sqSrc, this.sdPlayer)] === pcOppSide + PIECE_PAWN) {
       return true;
     }
-    for (var delta = -1; delta <= 1; delta += 2) {
-      if (this.squares[sqSrc + delta] == pcOppSide + PIECE_PAWN) {
+    for (let delta = -1; delta <= 1; delta += 2) {
+      if (this.squares[sqSrc + delta] === pcOppSide + PIECE_PAWN) {
         return true;
       }
     }
-    for (var i = 0; i < 4; i ++) {
-      if (this.squares[sqSrc + ADVISOR_DELTA[i]] != 0) {
+    for (let i = 0; i < 4; ++i) {
+      if (this.squares[sqSrc + ADVISOR_DELTA[i]] !== 0) {
         continue;
       }
-      for (var j = 0; j < 2; j ++) {
-        var pcDst = this.squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
-        if (pcDst == pcOppSide + PIECE_KNIGHT) {
+      for (let j = 0; j < 2; j ++) {
+        let pcDst = this.squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
+        if (pcDst === pcOppSide + PIECE_KNIGHT) {
           return true;
         }
       }
     }
-    for (var i = 0; i < 4; i ++) {
-      var delta = KING_DELTA[i];
-      var sqDst = sqSrc + delta;
+    for (let i = 0; i < 4; ++i) {
+      let delta = KING_DELTA[i];
+      let sqDst = sqSrc + delta;
       while (IN_BOARD(sqDst)) {
-        var pcDst = this.squares[sqDst];
+        let pcDst = this.squares[sqDst];
         if (pcDst > 0) {
-          if (pcDst == pcOppSide + PIECE_ROOK || pcDst == pcOppSide + PIECE_KING) {
+          if (pcDst === pcOppSide + PIECE_ROOK || pcDst === pcOppSide + PIECE_KING) {
             return true;
           }
           break;
@@ -964,9 +965,9 @@ Position.prototype.checked = function() {
       }
       sqDst += delta;
       while (IN_BOARD(sqDst)) {
-        var pcDst = this.squares[sqDst];
+        let pcDst = this.squares[sqDst];
         if (pcDst > 0) {
-          if (pcDst == pcOppSide + PIECE_CANNON) {
+          if (pcDst === pcOppSide + PIECE_CANNON) {
             return true;
           }
           break;
@@ -980,8 +981,8 @@ Position.prototype.checked = function() {
 }
 
 Position.prototype.isMate = function() {
-  var mvs = this.generateMoves(null);
-  for (var i = 0; i < mvs.length; i ++) {
+  let mvs = this.generateMoves(null);
+  for (let i = 0; i < mvs.length; ++i) {
     if (this.makeMove(mvs[i])) {
       this.undoMakeMove();
       return false;
@@ -999,21 +1000,21 @@ Position.prototype.banValue = function() {
 }
 
 Position.prototype.drawValue = function() {
-  return (this.distance & 1) == 0 ? -DRAW_VALUE : DRAW_VALUE;
+  return (this.distance & 1) === 0 ? -DRAW_VALUE : DRAW_VALUE;
 }
 
 Position.prototype.evaluate = function() {
-  var vl = (this.sdPlayer == 0 ? this.vlWhite - this.vlBlack :
+  let vl = (this.sdPlayer === 0 ? this.vlWhite - this.vlBlack :
       this.vlBlack - this.vlWhite) + ADVANCED_VALUE;
-  return vl == this.drawValue() ? vl - 1 : vl;
+  return vl === this.drawValue() ? vl - 1 : vl;
 }
 
 Position.prototype.nullOkay = function() {
-  return (this.sdPlayer == 0 ? this.vlWhite : this.vlBlack) > NULL_OKAY_MARGIN;
+  return (this.sdPlayer === 0 ? this.vlWhite : this.vlBlack) > NULL_OKAY_MARGIN;
 }
 
 Position.prototype.nullSafe = function() {
-  return (this.sdPlayer == 0 ? this.vlWhite : this.vlBlack) > NULL_SAFE_MARGIN;
+  return (this.sdPlayer === 0 ? this.vlWhite : this.vlBlack) > NULL_SAFE_MARGIN;
 }
 
 Position.prototype.inCheck = function() {
@@ -1025,23 +1026,23 @@ Position.prototype.captured = function() {
 }
 
 Position.prototype.repValue = function(vlRep) {
-  var vlReturn = ((vlRep & 2) == 0 ? 0 : this.banValue()) +
-      ((vlRep & 4) == 0 ? 0 : -this.banValue());
-  return vlReturn == 0 ? this.drawValue() : vlReturn;
+  let vlReturn = ((vlRep & 2) === 0 ? 0 : this.banValue()) +
+      ((vlRep & 4) === 0 ? 0 : -this.banValue());
+  return vlReturn === 0 ? this.drawValue() : vlReturn;
 }
 
 Position.prototype.repStatus = function(recur_) {
-  var recur = recur_;
-  var selfSide = false;
-  var perpCheck = true;
-  var oppPerpCheck = true;
-  var index = this.mvList.length - 1;
-  while (this.mvList[index] > 0 && this.pcList[index] == 0) {
+  let recur = recur_;
+  let selfSide = false;
+  let perpCheck = true;
+  let oppPerpCheck = true;
+  let index = this.mvList.length - 1;
+  while (this.mvList[index] > 0 && this.pcList[index] === 0) {
     if (selfSide) {
       perpCheck = perpCheck && this.chkList[index];
-      if (this.keyList[index] == this.zobristKey) {
+      if (this.keyList[index] === this.zobristKey) {
         recur --;
-        if (recur == 0) {
+        if (recur === 0) {
           return 1 + (perpCheck ? 2 : 0) + (oppPerpCheck ? 4 : 0);
         }
       }
@@ -1055,58 +1056,58 @@ Position.prototype.repStatus = function(recur_) {
 }
 
 Position.prototype.mirror = function() {
-  var pos = new Position();
+  let pos = new Position();
   pos.clearBoard();
-  for (var sq = 0; sq < 256; sq ++) {
-    var pc = this.squares[sq];
+  for (let sq = 0; sq < 256; ++sq) {
+    let pc = this.squares[sq];
     if (pc > 0) {
       pos.addPiece(MIRROR_SQUARE(sq), pc);
     }
   }
-  if (this.sdPlayer == 1) {
+  if (this.sdPlayer === 1) {
     pos.changeSide();
   }
   return pos;
 }
 
 Position.prototype.bookMove = function() {
-  if (typeof BOOK_DAT != "object" || BOOK_DAT.length == 0) {
+  if (typeof book_dat !== "function" || !DAT_LEN) {
     return 0;
   }
-  var mirror = false;
-  var lock = this.zobristLock >>> 1; // Convert into Unsigned
-  var index = binarySearch(BOOK_DAT, lock);
+  let mirror = false;
+  let lock = this.zobristLock >>> 1; // Convert into Unsigned
+  let index = binarySearch(book_dat, lock);
   if (index < 0) {
     mirror = true;
     lock = this.mirror().zobristLock >>> 1; // Convert into Unsigned
-    index = binarySearch(BOOK_DAT, lock);
+    index = binarySearch(book_dat, lock);
   }
   if (index < 0) {
     return 0;
   }
   index --;
-  while (index >= 0 && BOOK_DAT[index][0] == lock) {
+  while (index >= 0 && book_dat(index, 0) === lock) {
     index --;
   }
-  var mvs = [], vls = [];
-  var value = 0;
-  index ++;
-  while (index < BOOK_DAT.length && BOOK_DAT[index][0] == lock) {
-    var mv = BOOK_DAT[index][1];
+  let mvs = [], vls = [];
+  let value = 0;
+  ++index;
+  while (index < DAT_LEN && book_dat(index, 0) === lock) {
+    let mv = book_dat(index, 1);
     mv = (mirror ? MIRROR_MOVE(mv) : mv);
     if (this.legalMove(mv)) {
       mvs.push(mv);
-      var vl = BOOK_DAT[index][2];
+      let vl = book_dat(index, 2);
       vls.push(vl);
       value += vl;
     }
-    index ++;
+    ++index;
   }
-  if (value == 0) {
+  if (value === 0) {
     return 0;
   }
   value = Math.floor(Math.random() * value);
-  for (index = 0; index < mvs.length; index ++) {
+  for (index = 0; index < mvs.length; ++index) {
     value -= vls[index];
     if (value < 0) {
       break;
