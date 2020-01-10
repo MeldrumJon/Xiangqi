@@ -452,17 +452,6 @@ body.chat #chat { display: block; }
 	}
 }
 
-#board {
-	display: inline-block;
-	position: relative;
-	background: #DCC7AA url('res/wood.png') repeat;
-	border: 1px solid #777;
-	width: 521px;
-	height: 577px;
-	box-shadow: rgba(0, 0, 0, 0.3) 0.5px 1px 2px;
-	overflow: hidden;
-}
-
 body.play_local #chkNotiPush,
 body.play_local #chkNotiPush + label,
 body.play_local #btnChat,
@@ -483,6 +472,22 @@ body.play_computer #chat
 body.play_online #btnUndo, 
 body.play_online #selSideSkillGrp {
 	display: none;
+}
+
+#board {
+	display: inline-block;
+	position: relative;
+	background: #DCC7AA url('res/wood.png') repeat;
+	border: 1px solid #777;
+	box-shadow: rgba(0, 0, 0, 0.3) 0.5px 1px 2px;
+	overflow: hidden;
+}
+
+#board table td.diagtb {
+	background: linear-gradient(to top right, transparent calc(50% - 0.75px), #000, transparent calc(50% + 0.75px) )
+}
+#board table td.diagbt {
+	background: linear-gradient(to bottom right, transparent calc(50% - 0.75px), #000, transparent calc(50% + 0.75px) )
 }
 
 /* Modal */

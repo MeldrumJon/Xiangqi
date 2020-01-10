@@ -22,38 +22,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 const RESOURCES = 'res/';
 
+const THINKING_WIDTH = 43;
+const THINKING_HEIGHT = 11;
+
+const ROWS = 9;
+const COLS = 8;
+const RIVER = 4;
+
 const RESULT_UNKNOWN = 0;
 const RESULT_WIN = 1;
 const RESULT_DRAW = 2;
 const RESULT_LOSS = 3;
 
-const BOARD_WIDTH = 521;
-const BOARD_HEIGHT = 577;
-const SQUARE_SIZE = 57;
-const SQUARE_LEFT = (BOARD_WIDTH - SQUARE_SIZE * 9) >> 1;
-const SQUARE_TOP = (BOARD_HEIGHT - SQUARE_SIZE * 10) >> 1;
-const THINKING_SIZE = 32;
-const THINKING_LEFT = (BOARD_WIDTH - THINKING_SIZE) >> 1;
-const THINKING_TOP = (BOARD_HEIGHT - THINKING_SIZE) >> 1;
-const MAX_STEP = 8;
+const ANIM_STEP = 8;
+const MAX_STEPS = 16;
+
 const PIECE_NAME = [
   "oo", null, null, null, null, null, null, null,
   "rk", "ra", "rb", "rn", "rr", "rc", "rp", null,
   "bk", "ba", "bb", "bn", "br", "bc", "bp", null,
 ];
-
-function SQ_X(sq) {
-  return SQUARE_LEFT + (FILE_X(sq) - 3) * SQUARE_SIZE;
-}
-
-function SQ_Y(sq) {
-  return SQUARE_TOP + (RANK_Y(sq) - 3) * SQUARE_SIZE;
-}
-
-function MOVE_PX(src, dst, step) {
-  return Math.floor((src * step + dst * (MAX_STEP - step)) / MAX_STEP + .5) + "px";
-}
-
 const STARTUP_FEN = [
   "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w",
   "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w",
@@ -61,17 +49,31 @@ const STARTUP_FEN = [
   "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w",
 ];
 
+function SQ_X(sq) {
+  return (FILE_X(sq) - 3);
+}
+
+function SQ_Y(sq) {
+  return (RANK_Y(sq) - 3);
+}
+
+function MOVE_PX(src, dst, step) {
+  return Math.floor((src * step + dst * (MAX_STEP - step)) / MAX_STEP + .5) + "px";
+}
+
 export default class Board extends EventTarget {
     constructor(element, computer, online, handicap) {
       super();
-      this.online = online;
+      this.element = element
+
       this.computer = computer;
+      this.online = online;
 
       this.pos = new Position();
       this.pos.fromFen(STARTUP_FEN[handicap]);
-      this.animated = true;
+
+      this.animated = false;
       this.search = null;
-      this.imgSquares = [];
       this.sqSelected = 0;
       this.mvLast = 0;
       this.millis = 0;
@@ -79,69 +81,142 @@ export default class Board extends EventTarget {
       this.busy = false;
       this.gameover = false;
     
-      var style = element.style;
-      style.position = "relative";
-      style.width = BOARD_WIDTH + "px";
-      style.height = BOARD_HEIGHT + "px";
-      style.backgroundImage = "url(" + RESOURCES + "board.svg)";
-      var this_ = this;
-      for (var sq = 0; sq < 256; sq ++) {
+
+      this.element.style.position = "relative";
+
+      // Table
+      this.table = document.createElement('table');
+      this.table.style.position = 'absolute';
+      this.table.style.tableLayout = 'fixed';
+      this.table.style.borderCollapse = 'collapse';
+      this.table.style.borderSpacing = '0';
+      this.cells = [];
+      for (let j = 0; j < ROWS; ++j) {
+          let row = document.createElement('tr');
+          for (let i = 0; i < COLS; ++i) {
+              let cell = document.createElement('td');
+              let border = '1px solid #000';
+              if (j !== RIVER) {
+                  cell.style.border = border;
+              }
+              else if (i === 0) {
+                  cell.style.borderLeft = border;
+              }
+              else if (i === COLS-1) {
+                  cell.style.borderRight = border;
+              }
+              if ((j === 0 && i === 3) || (j === 1 && i === 4)
+                      || (j === ROWS-1 && i === 4) || (j === ROWS-2 && i === 3)) {
+                  cell.classList.add('diagtb');
+              }
+              else if ((j === 1 && i === 3) || (j === 0 && i === 4)
+                      || (j === ROWS-1 && i === 3) || (j === ROWS-2 && i === 4)) {
+                  cell.classList.add('diagbt');
+              }
+              row.append(cell);
+              this.cells.push(cell);
+          }
+          this.table.append(row);
+      }
+      this.element.append(this.table);
+    
+
+      // Pieces
+      let pieceMouseDown = function(evt) {
+          this.clickSquare(evt.target.XiSqr);
+      }.bind(this);
+      let pieceDragStart = function(evt) {
+          evt.target.style.opacity = 0;
+          this.clickSquare(evt.target.XiSqr);
+      }.bind(this);
+      let pieceDragEnd = function(evt) {
+          evt.target.style.opacity = 1;
+      };
+      let pieceDragOver = function(evt) {
+          evt.preventDefault();
+      };
+      let pieceDrop = function (evt) {
+          evt.preventDefault();
+          let saveAnimate = this.animated;
+          this.animated = false;
+          this.clickSquare(evt.target.XiSqr);
+          this.animated = saveAnimate;
+      }.bind(this);
+
+      this.imgSquares = [];
+      let elImgs = document.createElement('div');
+      for (let sq = 0; sq < 256; sq++) {
         if (!IN_BOARD(sq)) {
           this.imgSquares.push(null);
           continue;
         }
-        var img = document.createElement("img");
+        let img = document.createElement("img");
+        img.XiSqr = sq;
         img.setAttribute('draggable', true);
-        img.setAttribute('width', SQUARE_SIZE);
-        img.setAttribute('height', SQUARE_SIZE);
-        var style = img.style;
-        style.position = "absolute";
-        style.left = SQ_X(sq) + 'px';
-        style.top = SQ_Y(sq) + 'px';
-        style.width = SQUARE_SIZE + 'px';
-        style.height = SQUARE_SIZE + 'px';
-        style.zIndex = 0;
-        img.onmousedown = function(sq_) {
-          return function(evt) {
-            this_.clickSquare(sq_);
-          }
-        } (sq);
-        img.ondragstart = function(evt) {
-          this.style.opacity = 0;
-        }
-        img.ondragend = function(evt) {
-          this.style.opacity = 1;
-        }
-        img.ondragover = function (evt) {
-          evt.preventDefault();
-        }
-        img.ondrop = function (sq_) {
-          return function(evt) {
-            evt.preventDefault();
-            var saveAnimate = this_.animated; // Disable animation when dragging and dropping.
-            this_.animated = false;
-            this_.clickSquare(sq_);
-            this_.animated = saveAnimate;
-          }
-        } (sq);
-        element.appendChild(img);
+        img.style.position = "absolute";
+        img.addEventListener('mousedown', pieceMouseDown);
+        img.addEventListener('dragstart', pieceDragStart);
+        img.addEventListener('dragend', pieceDragEnd);
+        img.addEventListener('dragover', pieceDragOver);
+        img.addEventListener('drop', pieceDrop);
+        elImgs.appendChild(img);
         this.imgSquares.push(img);
       }
+      element.appendChild(elImgs);
     
       this.thinking = new Image(43, 11);
       this.thinking.alt = "Thinking...";
       this.thinking.src = RESOURCES + 'thinking.gif';
       this.thinking.style.position = 'absolute';
-      this.thinking.style.left = THINKING_LEFT + "px";
-      this.thinking.style.top = THINKING_TOP + "px";
+      this.thinking.style.opacity = '0.5';
       this.thinking.style.display = 'none';
       element.appendChild(this.thinking);
     
-      this.dummy = document.createElement("div");
-      this.dummy.style.position = "absolute";
-      element.appendChild(this.dummy);
-    
       this.flushBoard();
+      this.resize();
+    }
+
+    resize() {
+        let width = this.element.clientWidth;
+        let height = this.element.clientHeight;
+
+        // Thinking
+        this.thinking.style.left = ~~((width - THINKING_WIDTH)/2) + "px";
+        this.thinking.style.top = ~~((height - THINKING_HEIGHT)/2) + "px";
+
+        // Table
+        let cWidth = ~~(width/(COLS+1) - 1); // -1 account for border
+        let cHeight = ~~(height/(ROWS+1) - 1); // -1 account for border
+        let cWidthStr = cWidth + 'px';
+        let cHeightStr = cHeight + 'px';
+        for (let i = 0, len = this.cells.length; i < len; ++i) {
+            let cell = this.cells[i];
+            cell.style.width = cWidthStr;
+            cell.style.height = cHeightStr;
+        }
+        let tOffTop = ~~((height - this.table.clientHeight)/2); 
+        let tOffLeft = ~~((width - this.table.clientWidth)/2); 
+        this.table.style.top = tOffTop + 'px';
+        this.table.style.left = tOffLeft + 'px';
+
+        cWidth = (this.table.clientWidth-1)/(COLS); // Use actual table cell width/height
+        cHeight = (this.table.clientHeight-1)/(ROWS);
+
+        // Points
+        let pSize = ~~(cHeight);
+        pSize = (pSize & 1) ? pSize : pSize - 1; // force odd
+        let pSizeStr = pSize + 'px';
+        let pOffTop = tOffTop - ~~(pSize/2);
+        let pOffLeft = tOffLeft - ~~(pSize/2);
+        for (let i = 0, len = this.imgSquares.length; i < len; ++i) {
+            let img = this.imgSquares[i];
+            if (!img) { continue; }
+            let sq = img.XiSqr;
+            img.style.width = pSizeStr;
+            img.style.height = pSizeStr;
+            img.style.top = (pOffTop + cHeight*SQ_Y(sq)) + 'px';
+            img.style.left = (pOffLeft + cWidth*SQ_X(sq)) + 'px';
+        }
     }
     
     
@@ -173,29 +248,40 @@ export default class Board extends EventTarget {
         return;
       }
     
-      var sqSrc = this.flipped(SRC(mv));
-      var xSrc = SQ_X(sqSrc);
-      var ySrc = SQ_Y(sqSrc);
-      var sqDst = this.flipped(DST(mv));
-      var xDst = SQ_X(sqDst);
-      var yDst = SQ_Y(sqDst);
-      var style = this.imgSquares[sqSrc].style;
-      style.zIndex = 256;
-      var step = MAX_STEP - 1;
-      var this_ = this;
-      var timer = setInterval(function() {
-        if (step == 0) {
-          clearInterval(timer);
-          style.left = xSrc + "px";
-          style.top = ySrc + "px";
-          style.zIndex = 0;
-          this_.postAddMove(mv, computerMove);
-        } else {
-          style.left = MOVE_PX(xSrc, xDst, step);
-          style.top = MOVE_PX(ySrc, yDst, step);
-          step --;
-        }
-      }, 16);
+      let srcStyle = this.imgSquares[this.flipped(SRC(mv))].style;
+      let dstStyle = this.imgSquares[this.flipped(DST(mv))].style;
+      let srcX = parseInt(srcStyle.left, 10);
+      let srcY = parseInt(srcStyle.top, 10);
+      let dstX = parseInt(dstStyle.left, 10);
+      let dstY = parseInt(dstStyle.top, 10);
+      let a = dstX - srcX;
+      let b = dstY - srcY;
+      let dist = Math.sqrt(a*a + b*b);
+      let steps = ~~(dist/ANIM_STEP);
+      if (steps > MAX_STEPS) { steps = MAX_STEPS; }
+
+      srcStyle.zIndex = 256;
+      let anim = function() {
+          if (steps === 0) {
+              this.postAddMove(mv, computerMove);
+              srcStyle.left = srcX + 'px';
+              srcStyle.top = srcY + 'px';
+              srcStyle.zIndex = 0;
+          }
+          else {
+              let goalX = parseInt(dstStyle.left, 10);
+              let goalY = parseInt(dstStyle.top, 10);
+              let atX = parseInt(srcStyle.left, 10);
+              let atY = parseInt(srcStyle.top, 10);
+              let stepX = (goalX - atX)/steps;
+              let stepY = (goalY - atY)/steps;
+              srcStyle.left = (atX + stepX) + 'px';
+              srcStyle.top = (atY + stepY) + 'px';
+              --steps;
+              requestAnimationFrame(anim);
+          }
+      }.bind(this);
+      requestAnimationFrame(anim);
     }
     
     postAddMove(mv, computerMove) {
@@ -236,29 +322,38 @@ export default class Board extends EventTarget {
         // dispatchEvent 'gameover' is in postMate()
 
         // Choose to animate king
-        if (!this.animated || sqMate == 0) {
+        if (sqMate == 0) {
+          this.postMate(computerMove);
+          return;
+        }
+        else if (!this.animated) {
+          sqMate = this.flipped(sqMate);
+          this.imgSquares[sqMate].src = RESOURCES + 
+              (this.pos.sdPlayer == 0 ? "r" : "b") + "km.svg";
           this.postMate(computerMove);
           return;
         }
         sqMate = this.flipped(sqMate);
-        var style = this.imgSquares[sqMate].style;
+        let style = this.imgSquares[sqMate].style;
+        let x = parseInt(style.left, 10);
+        let steps = ANIM_STEP-1;
+
         style.zIndex = 256;
-        var xMate = SQ_X(sqMate);
-        var step = MAX_STEP;
-        var this_ = this;
-        var timer = setInterval(function() {
-          if (step == 0) {
-            clearInterval(timer);
-            style.left = xMate + "px";
-            style.zIndex = 0;
-            this_.imgSquares[sqMate].src = RESOURCES +
-                (this_.pos.sdPlayer == 0 ? "r" : "b") + "km.svg";
-            this_.postMate(computerMove);
-          } else {
-            style.left = (xMate + ((step & 1) == 0 ? step : -step) * 2) + "px";
-            step --;
-          }
-        }, 50);
+        let anim = function() {
+            if (steps === 0) {
+                style.left = x + 'px';
+                style.zIndex = 0;
+                this.imgSquares[sqMate].src = RESOURCES + 
+                    (this.pos.sdPlayer == 0 ? "r" : "b") + "km.svg";
+                setTimeout(this.postMate(computerMove), 250);
+            }
+            else {
+                style.left = (x + ((steps & 1) == 0 ? steps : -steps) * 2) + "px";
+                --steps;
+                requestAnimationFrame(anim);
+            }
+        }.bind(this);
+        requestAnimationFrame(anim);
         return;
       }
     
@@ -282,7 +377,6 @@ export default class Board extends EventTarget {
         };
         this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
         this.dispatchEvent(new CustomEvent('gameover', { detail: gameoverDetails }));
-        this.postAddMove2();
         this.busy = false;
         return;
       }
@@ -303,7 +397,6 @@ export default class Board extends EventTarget {
           };
           this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
           this.dispatchEvent(new CustomEvent('gameover', { detail: gameoverDetails }));
-          this.postAddMove2();
           this.busy = false;
           return;
         }
@@ -323,7 +416,6 @@ export default class Board extends EventTarget {
           };
           this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
           this.dispatchEvent(new CustomEvent('gameover', { detail: gameoverDetails }));
-          this.postAddMove2();
           this.busy = false;
           return;
         }
@@ -340,14 +432,7 @@ export default class Board extends EventTarget {
 
       this.dispatchEvent(new CustomEvent('move', { detail: moveDetails }));
     
-      this.postAddMove2();
       this.response();
-    }
-    
-    postAddMove2() {
-      if (typeof this.onAddMove == "function") {
-        this.onAddMove();
-      }
     }
     
     postMate(computerMove) {
@@ -356,7 +441,6 @@ export default class Board extends EventTarget {
         message: computerMove ? "You lose, but keep up the good work!" : "Congratulations on your victory!"
       };
       this.dispatchEvent(new CustomEvent('gameover', { detail: gameoverDetails }));
-      this.postAddMove2();
       this.busy = false;
     }
     
@@ -376,11 +460,11 @@ export default class Board extends EventTarget {
       // Computer game, computer's move
       this.busy = true; // Should have already happened, but stay busy until computer makes a move
       this.thinking.style.display = "inline-block";
-      var this_ = this;
-      setTimeout(function() {
-        this_.addMove(this_.search.searchMain(LIMIT_DEPTH, this_.millis), true);
-        this_.thinking.style.display = "none";
-      }, 250);
+      let think = function() {
+        this.addMove(this.search.searchMain(LIMIT_DEPTH, this.millis), true);
+        this.thinking.style.display = "none";
+      }.bind(this);
+      setTimeout(think, 250);
     }
     
     clickSquare(sq_) {

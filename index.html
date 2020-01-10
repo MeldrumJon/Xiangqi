@@ -10,23 +10,11 @@
 	<script defer src="lib/EventTargetPolyfill.js"></script>
 	<script defer src="js/chess/book.js"></script>
 	<script defer src="js/chess/position.js"></script>
-	<script defer src="js/chess/cchess.js"></script>
 	<script defer src="js/chess/search.js"></script>
-	<script defer src="js/chess/board.js"></script>
 	<script type="module" src="js/app.js"></script>
 </head>
 
 <body id="xiangqi_board_game" class="shade">
-  <div style="display: none">
-    <h2>Moves</h2>
-    <select id="selMoveList" size="10" onchange="moveList_change()">
-      <option selected value="0">=== Start ===</option>
-    </select>
-    <input type="checkbox" class="checkbox" id="chkAnimated" checked onclick="board.animated=checked"><label
-      for="chkAnimated">Animations</label></input>
-    <input type="button" class="button" value="Restart" onclick="restart_click()">
-  </div>
-
 	<div class="sidebar" id="chat">
 		<div class="messages">
 			<div id="bubbles" class="bubbles">
@@ -53,6 +41,8 @@
 			<legend>Game</legend>
 			<input type="checkbox" id="chkBoardSize">
 			<label for="chkBoardSize"><span class="switch"><span class="slider"></span></span>Limit Width</label>
+			<input type="checkbox" id="chkAnimated">
+			<label for="chkAnimated"><span class="switch"><span class="slider"></span></span>Animations</label>
 			<button type="button" id="btnUndo">Undo</button>
 			<div class="selgrp" id="selSideSkillGrp">
 				<label for="selSideSkill">Computer Skill:</label>

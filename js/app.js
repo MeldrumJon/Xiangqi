@@ -3,6 +3,11 @@ import * as storage from './storage.js';
 import PeerCom from './PeerCom.js';
 import Board from './chess/board.js';
 
+/*
+import test from './chess/test.js';
+test();
+*/
+
 const elBody = document.getElementById('xiangqi_board_game');
 
 // Board
@@ -44,6 +49,7 @@ const elBtnSendMsg = document.getElementById('btnSendMsg');
 const elBtnUndo = document.getElementById('btnUndo');
 const elSelSideSkill = document.getElementById('selSideSkill');
 const elChkBoardSize = document.getElementById('chkBoardSize');
+const elChkAnimated = document.getElementById('chkAnimated');
 const elChkNotiSound = document.getElementById('chkNotiSound');
 const elChkNotiPush = document.getElementById('chkNotiPush');
 
@@ -71,6 +77,9 @@ let hideModals = function () {
     }
 }
 
+const TYPE_LOCAL = -1;
+const TYPE_FIRSTMOVE = 1;
+const TYPE_OTHERMOVE = 0;
 
 let main = function () {
     let peerId = new URLSearchParams(window.location.search).get('peerId');
@@ -88,12 +97,10 @@ let main = function () {
 
     let board = null;
 
-    let start = function (online, firstMove, local=false, handicap=0, skill=0) {
-        let type = (local) ? -1 : (firstMove) ? 1 : 0;
+    let start = function (computer=false, skill=0) {
+        board.animated = (storage.getItem('animated') !== 'disabled');
 
-        board = new Board(elBoard, type, online, handicap);
-
-        if (!online && !local) { // vs. computer
+        if (computer) { // vs. computer
             board.setSearch(16);
             board.millis = Math.pow(10, skill + 1);
             board.response();
@@ -101,7 +108,6 @@ let main = function () {
 
         let onmove = function(evt) {
             let move = evt.detail;
-            console.log(board.pos.mvList);
             if (board.online) {
                 if (!move.isComputer) {
                     peerCom.send('Move', move);
@@ -138,7 +144,7 @@ let main = function () {
         };
         board.addEventListener('gameover', ongameover);
 
-        let cls = (local) ? 'play_local' : (online) ? 'play_online' : 'play_computer';
+        let cls = (computer) ? 'play_computer' : (board.online) ? 'play_online' : 'play_local';
         elBody.classList.add(cls);
     }
 
@@ -147,19 +153,23 @@ let main = function () {
         let availWidth = elGame.clientWidth;
         let availHeight = elGame.clientHeight;
 
-        // Pay attention to aspect ratio
-        // use AvailHeight and availWidth to calculate board width/height
-        // if it fills either, then pick the bigger.
 
-        /*
-        size -= 2; // borders
-        let sizestr = size + 'px';
-        elBoard.style.width = sizestr;
-        elBoard.style.height = sizestr;
-        */
+        let height = availHeight;
+        let width = ~~((height * 9)/10) + 1;
+        if (width > availWidth) {
+            width = availWidth;
+            height = ~~((width * 10)/9) + 1;
+        }
+
+        width -= 2; // borders
+        height -= 2;
+
+        elBoard.style.width = width + 'px';
+        elBoard.style.height = height + 'px';
+
         elMessages.scrollTop = elMessages.scrollHeight;
 
-        //if (board) { board.resize(); }
+        if (board) { board.resize(); }
     };
     window.addEventListener('resize', resize);
     //resize(); // Not necessary because of setBoardSize() below
@@ -177,7 +187,8 @@ let main = function () {
     });
 
     elBtnLocal.addEventListener('click', function () {
-        start(false, true, true);
+        board = new Board(elBoard, TYPE_LOCAL, false, 0);
+        start();
         hideModals();
     });
 
@@ -186,7 +197,8 @@ let main = function () {
     });
 
     elBtnComputerStart.addEventListener('click', function() {
-        start(false, 1 - elSelFirstMove.selectedIndex, false, elSelHandicap.selectedIndex, elSelSkill.selectedIndex);
+        board = new Board(elBoard, 1 - elSelFirstMove.selectedIndex, false, elSelHandicap.selectedIndex);
+        start(true, elSelSkill.selectedIndex);
         hideModals();
     });
 
@@ -267,6 +279,15 @@ let main = function () {
     });
     elChkNotiSound.checked = (storage.getItem('notiSound') === 'enabled');
 
+    elChkAnimated.addEventListener('change', function(evt) {
+        let status = elChkAnimated.checked ? 'enabled' : 'disabled';
+        storage.setItem('animated', status);
+        if (board) {
+            board.animated = elChkAnimated.checked;
+        }
+    });
+    elChkAnimated.checked = (storage.getItem('animated') !== 'disabled');
+
     elChkNotiPush.addEventListener('change', function(evt) {
         if (notify.pushStatus() !== 'granted' && elChkNotiPush.checked) {
             notify.pushAsk(function (permission) {
@@ -308,7 +329,8 @@ let main = function () {
         console.log('A peer connected');
 
         if (!peerId) { // New game
-            start(true, true);
+            board = new Board(elBoard, TYPE_FIRSTMOVE, true, 0);
+            start();
             hideModals();
         }
         peerId = evt.detail;
@@ -334,10 +356,12 @@ let main = function () {
     // Peer2Peer Data
     // Games Start / Reconnect
     peerCom.addReceiveHandler('Start', function (obj) {
-        start(true, !obj.type);
-        for (let i = 1, len = obj.moves.length; i < len; ++i) {
+        board = new Board(elBoard, (obj.type) ? 0 : 1, true, 0);
+        for (let i = 1, len = obj.moves.length-1; i < len; ++i) {
             board.addMove(obj.moves[i], board.computerMove());
         }
+        start();
+        board.addMove(obj.moves[obj.moves.length-1], board.computerMove());
         hideModals();
     });
 

@@ -1,6 +1,4 @@
-"use strict";
-
-var PUZZLE_LIST = [
+const PUZZLE_LIST = [
   "9/2Cca4/3k1C3/4P1p2/4N1b2/4R1r2/4c1n2/3p1n3/2rNK4/9 w",
   "4C4/4a4/b2ank2b/9/9/1RNR1crC1/3r1p3/3cKA3/4A4/4n4 w",
   "9/4a4/3k1a3/2R3r2/1N5n1/C7c/1N5n1/2R3r2/3p1p3/4K4 w",
@@ -243,22 +241,22 @@ var PUZZLE_LIST = [
   "3ak1b1r/4a2Pn/4b4/4C4/9/9/cR7/n8/4A1p2/3AKC3 w",
 ];
 
-function test() {
-  var pos = new Position();
-  var legal = 0, gened = 0, moved = 0, check = 0;
-  for (var i = 0; i < PUZZLE_LIST.length; i ++) {
+export default function test() {
+  let pos = new Position();
+  let legal = 0, gened = 0, moved = 0, check = 0;
+  for (let i = 0; i < PUZZLE_LIST.length; i ++) {
     pos.fromFen(PUZZLE_LIST[i]);
-    for (var sqSrc = 0; sqSrc < 256; sqSrc ++) {
+    for (let sqSrc = 0; sqSrc < 256; sqSrc ++) {
       if (IN_BOARD(sqSrc)) {
-        for (var sqDst = 0; sqDst < 256; sqDst ++) {
+        for (let sqDst = 0; sqDst < 256; sqDst ++) {
           if (IN_BOARD(sqDst)) {
             legal += (pos.legalMove(MOVE(sqSrc, sqDst)) ? 1 : 0);
           }
         }
       }
     }
-    var mvs = pos.generateMoves(null);
-    for (var j = 0; j < mvs.length; j ++) {
+    let mvs = pos.generateMoves(null);
+    for (let j = 0; j < mvs.length; j ++) {
       if (pos.makeMove(mvs[j])) {
         moved ++;
         check += (pos.inCheck() ? 1 : 0);
@@ -269,3 +267,4 @@ function test() {
   }
   alert(legal + "|" + gened + "|" + moved + "|" + check);
 }
+
