@@ -34,7 +34,7 @@ h2 {
 h2:first-child {
 	margin-top: 0;
 }
-p {
+p, div.space {
 	line-height: 1.5;
 	margin-bottom: 1rem;
 }
@@ -532,8 +532,8 @@ body.mod_disconnected #mod_disconnected,
 body.mod_computer #mod_computer,
 body.mod_gameover #mod_gameover {
 	display: block;
-	opacity: 1;
 	animation: fadeIn 0.3s;
+	opacity: 1;
 }
 
 @keyframes fadeIn {

@@ -3,7 +3,6 @@
 
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="Content-Type" content="text/html">
 	<title>Xiangqi</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script defer src="lib/peerjs/peerjs.min.js"></script>
@@ -14,7 +13,7 @@
 	<script type="module" src="js/app.js"></script>
 </head>
 
-<body id="xiangqi_board_game" class="shade">
+<body id="xiangqi_board_game" class="shade mod_gameselect">
 	<div class="sidebar" id="chat">
 		<div class="messages">
 			<div id="bubbles" class="bubbles">
@@ -72,11 +71,13 @@
 		</div>
 		<div class="modal" id="mod_shareurl">
 			<h2>Connect</h2>
-			<p>Share this link with your opponent:</p>
-			<div id="peerShow" class="combo hide">
-				<div id="msgUrl" class="stretch"></div>
-				<button type="button" id="btnCopyUrl">Copy</button>
-			</div>	
+			<div id="peerShow" class="hide">
+				<p>Share this link with your opponent:</p>
+				<div class="combo">
+					<div id="msgUrl" class="stretch"></div>
+					<button type="button" id="btnCopyUrl">Copy</button>
+				</div>	
+			</div>
 			<p id="peerWait">
 				Trying to connect to PeerJS server...
 			</p>
@@ -91,34 +92,34 @@
 		</div>
 		<div class="modal" id="mod_computer">
 			<h2>Settings</h2>
-			<p>
-			<fieldset>
-			<legend>First Move</legend>
-			<select id="selFirstMove" size="2">
-				<option selected value="0">You</option>
-				<option value="1">Computer</option>
-			</select>
-			</fieldset>
-			<fieldset>
-			<legend>Computer Skill</legend>
-			<select id="selSkill" size="3">
-				<option selected value="0">Beginner</option>
-				<option value="1">Amateur</option>
-				<option value="2">Professional</option>
-			</select>
-			</fieldset>
-			</p>
-			<p>
-			<fieldset>
-			<legend>Starting Player Handicap</legend>
-			<select id="selHandicap">
-				<option selected value="0">No handicap</option>
-				<option value="1">Remove one horse</option>
-				<option value="2">Remove both horses</option>
-				<option value="3">Remove elephants, advisors, pawns</option>
-			</select>
-			</fieldset>
-			</p>
+			<div class="space">
+				<fieldset>
+				<legend>First Move</legend>
+				<select id="selFirstMove" size="2">
+					<option selected value="0">You</option>
+					<option value="1">Computer</option>
+				</select>
+				</fieldset>
+				<fieldset>
+				<legend>Computer Skill</legend>
+				<select id="selSkill" size="3">
+					<option selected value="0">Beginner</option>
+					<option value="1">Amateur</option>
+					<option value="2">Professional</option>
+				</select>
+				</fieldset>
+			</div>
+			<div class="space">
+				<fieldset>
+				<legend>Starting Player Handicap</legend>
+				<select id="selHandicap">
+					<option selected value="0">No handicap</option>
+					<option value="1">Remove one horse</option>
+					<option value="2">Remove both horses</option>
+					<option value="3">Remove elephants, advisors, pawns</option>
+				</select>
+				</fieldset>
+			</div>
 			<button type="button" id="btnComputerStart">Play</button>
 		</div>
 		<div class="modal" id="mod_gameover">
@@ -129,9 +130,9 @@
 	</div>
 
 	<div style="display:none"> <!-- Try to preload sounds -->
-		<audio preload="auto" controls="none" src="res/capture.wav" id="sndCapture"></audio>
-		<audio preload="auto" controls="none" src="res/check.wav" id="sndCheck"></audio>
-		<audio preload="auto" controls="none" src="res/move.wav" id="sndMove"></audio>
+		<audio preload="auto" src="res/capture.wav" id="sndCapture"></audio>
+		<audio preload="auto" src="res/check.wav" id="sndCheck"></audio>
+		<audio preload="auto" src="res/move.wav" id="sndMove"></audio>
 	</div>
 </body>
 
