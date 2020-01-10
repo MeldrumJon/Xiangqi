@@ -515,6 +515,10 @@ body.shade #shade {
 	opacity: 1;
 }
 
+body.preload #shade {
+	transition: none !important;
+}
+
 .modal {
 	max-height: 100%;
 	padding: 0.8rem;

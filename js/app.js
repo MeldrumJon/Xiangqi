@@ -95,6 +95,8 @@ let main = function () {
         showModal('mod_gameselect');
     }
 
+    elBody.classList.remove('preload');
+
     let board = null;
 
     let start = function (computer=false, skill=0) {
