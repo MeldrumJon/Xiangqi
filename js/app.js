@@ -333,7 +333,6 @@ let main = function () {
         if (!peerId) { // New game
             board = new Board(elBoard, TYPE_FIRSTMOVE, true, 0);
             start();
-            hideModals();
         }
         peerId = evt.detail;
 
@@ -343,6 +342,7 @@ let main = function () {
                 moves: board.pos.mvList
             });
         }
+        hideModals();
 
         // Append URL with peerId
         let peerUrl = new URL(window.location.href);
